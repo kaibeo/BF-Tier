@@ -1,3 +1,7 @@
+const supabase = window.supabase.createClient(
+  "https://snucncoddldeqhzbcvbd.supabase.co",
+  "sb_publishable_kSCd6gnAXA3AZ34xZD0ffw_V_1TWYV1"
+);
 // ═══════════════════════════════════════════════════════════
 //  DATABASE SYSTEM — localStorage persistent storage
 // ═══════════════════════════════════════════════════════════
