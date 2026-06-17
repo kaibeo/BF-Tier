@@ -66,6 +66,22 @@ function navigate(page, player=null){
   }
   if(player) selectedPlayer=player;
   currentPage=page;
+
+  // Always hide the profile ban overlay when navigating away from player page
+  if(page !== 'player' && typeof hideProfileBanOverlay === 'function'){
+    hideProfileBanOverlay();
+  }
+
+  // Close any open modals/overlays when navigating
+  ['editPlayerOverlay','addPlayerOverlay','adminLoginOverlay'].forEach(function(id){
+    const el = document.getElementById(id);
+    if(el) el.classList.remove('active');
+  });
+  ['banModal','discordOAuthModal','banModalOverlay'].forEach(function(id){
+    const el = document.getElementById(id);
+    if(el) el.style.display = 'none';
+  });
+
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   const pageEl=$id('page-'+page);
   if(pageEl) pageEl.classList.add('active');
