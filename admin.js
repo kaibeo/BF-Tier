@@ -108,10 +108,10 @@ function openEditModal(playerId){
   $id('editWinRate').value=p.winRate;
   $id('editMatches').value=p.matches;
   $id('editScoreOverall').value=p.scores.overall||0;
-  $id('editScore1v1').value=p.scores['1v1']||0;
-  $id('editScore1v2').value=p.scores['1v2']||0;
-  $id('editScore2v2').value=p.scores['2v2']||0;
-  $id('editScoreSpeedrun').value=p.scores.speedrun||0;
+  $id('editScore1v1').value=p.scores.solo||0;
+  $id('editScore1v2').value=p.scores.dual||0;
+  $id('editScore2v2').value=p.scores.speedrun||0;
+  $id('editScoreSpeedrun').value=p.scores.war||0;
   $id('editScoreSd').value=p.scores.sd||0;
   const v=getVerification(p.username);
   $id('editVerifTryouter').checked=!!v.tryouter;
@@ -135,10 +135,10 @@ function savePlayerEdit(){
   p.winRate=parseInt($id('editWinRate').value)||p.winRate;
   p.matches=parseInt($id('editMatches').value)||p.matches;
   p.scores.overall=parseInt($id('editScoreOverall').value)||0;
-  p.scores['1v1']=parseInt($id('editScore1v1').value)||0;
-  p.scores['1v2']=parseInt($id('editScore1v2').value)||0;
-  p.scores['2v2']=parseInt($id('editScore2v2').value)||0;
-  p.scores.speedrun=parseInt($id('editScoreSpeedrun').value)||0;
+  p.scores.solo=parseInt($id('editScore1v1').value)||0;
+  p.scores.dual=parseInt($id('editScore1v2').value)||0;
+  p.scores.speedrun=parseInt($id('editScore2v2').value)||0;
+  p.scores.war=parseInt($id('editScoreSpeedrun').value)||0;
   p.scores.sd=parseInt($id('editScoreSd').value)||0;
   // Carry verification flags over if the username changed, then apply new values
   renameVerification(oldUsername,p.username);
@@ -212,10 +212,10 @@ function confirmAddPlayer(){
     matches:parseInt($id('addMatches').value)||100,
     scores:{
       overall:parseInt($id('addScoreOverall').value)||7000,
-      '1v1':parseInt($id('addScore1v1').value)||7000,
-      '1v2':parseInt($id('addScore1v2').value)||7000,
-      '2v2':parseInt($id('addScore2v2').value)||7000,
-      speedrun:parseInt($id('addScoreSpeedrun').value)||7000,
+      solo:parseInt($id('addScore1v1').value)||7000,
+      dual:parseInt($id('addScore1v2').value)||7000,
+      speedrun:parseInt($id('addScore2v2').value)||7000,
+      war:parseInt($id('addScoreSpeedrun').value)||7000,
       sd:parseInt($id('addScoreSd').value)||7000,
     }
   };
@@ -421,8 +421,8 @@ function delay(ms){return new Promise(function(r){setTimeout(r,ms);})}
 //  DISCORD OAUTH2 — Link Discord account to player profile
 // ══════════════════════════════════════════════════════════
 
-// Paste your Discord Application Client ID here
-const DISCORD_CLIENT_ID = 'YOUR_DISCORD_CLIENT_ID';
+// Paste your Discord Application Client ID here — get from: https://discord.com/developers/applications
+const DISCORD_CLIENT_ID = '1234567890123456789'; // ← THAY BẰNG ID THỰC TẾ CỦA BẠN
 
 // This must match exactly what you set in Discord Developer Portal → OAuth2 → Redirects
 const DISCORD_REDIRECT_URI = window.location.origin + window.location.pathname;
@@ -455,8 +455,8 @@ function handleOverlayClick(e) {
  * Uses implicit grant (token in hash) so no backend needed.
  */
 function authorize() {
-  if (!DISCORD_CLIENT_ID || DISCORD_CLIENT_ID === 'YOUR_DISCORD_CLIENT_ID') {
-    showToast('⚠ Chưa cấu hình DISCORD_CLIENT_ID trong admin.js!', true);
+  if (!DISCORD_CLIENT_ID || DISCORD_CLIENT_ID === 'YOUR_DISCORD_CLIENT_ID' || DISCORD_CLIENT_ID === '1234567890123456789') {
+    showToast('⚠ Chưa cấu hình DISCORD_CLIENT_ID trong admin.js! Vui lòng lấy ID từ Discord Developer Portal.', true);
     return;
   }
   // Save pending player ID to sessionStorage so we can restore after redirect
