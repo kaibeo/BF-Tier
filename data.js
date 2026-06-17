@@ -69,7 +69,7 @@ function verificationBadges(username){
 
 // ═══════════════════════════════════════════════════════════
 const REGIONS = ["Global","Vietnam","Thailand","Indonesia","Philippines","Malaysia","Singapore","North America","Europe"];
-const MODES   = ["Overall","Solo","Dual","Speed Run"];
+const MODES   = ["Overall","Solo","Dual","Speed Run","War"];
 // 40-tier system: OT1 (highest) → LT10 (lowest), displayed top to bottom
 const TIERS = (()=>{
   const rows=[];
@@ -88,21 +88,21 @@ const RANK_COLORS = {
 };
 
 const PLAYERS = [
-  {id:1,username:"Kaimc",robloxId:"2661309510",region:"Vietnam",rank:"OT1",scores:{overall:9800,"1v1":9750,"1v2":9700,"2v2":9600,speedrun:9500,sd:9820},winRate:87,matches:1240},
-  {id:2,username:"Shadow",robloxId:"987654321",region:"Philippines",rank:"OT1",scores:{overall:9600,"1v1":9500,"1v2":9650,"2v2":9400,speedrun:9300,sd:9550},winRate:84,matches:980},
-  {id:3,username:"Dragon",robloxId:"112233445",region:"Thailand",rank:"HT1",scores:{overall:9400,"1v1":9300,"1v2":9200,"2v2":9100,speedrun:9000,sd:9350},winRate:81,matches:1100},
-  {id:4,username:"Alpha",robloxId:"556677889",region:"Indonesia",rank:"HT1",scores:{overall:9200,"1v1":9100,"1v2":9000,"2v2":8900,speedrun:8800,sd:9150},winRate:79,matches:870},
-  {id:5,username:"NightKing",robloxId:"223344556",region:"Malaysia",rank:"MT1",scores:{overall:9000,"1v1":8900,"1v2":8800,"2v2":8700,speedrun:8600,sd:8950},winRate:77,matches:760},
-  {id:6,username:"ViperX",robloxId:"334455667",region:"Singapore",rank:"MT1",scores:{overall:8800,"1v1":8700,"1v2":8600,"2v2":8500,speedrun:8400,sd:8750},winRate:75,matches:650},
-  {id:7,username:"ZeroTwo",robloxId:"445566778",region:"North America",rank:"LT1",scores:{overall:8600,"1v1":8500,"1v2":8400,"2v2":8300,speedrun:8200,sd:8550},winRate:73,matches:540},
-  {id:8,username:"Phoenix",robloxId:"556677880",region:"Europe",rank:"LT1",scores:{overall:8400,"1v1":8300,"1v2":8200,"2v2":8100,speedrun:8000,sd:8350},winRate:71,matches:430},
-  {id:9,username:"BlazeFist",robloxId:"667788991",region:"Vietnam",rank:"OT2",scores:{overall:8200,"1v1":8100,"1v2":8000,"2v2":7900,speedrun:7800,sd:8150},winRate:69,matches:390},
-  {id:10,username:"IceLord",robloxId:"778899002",region:"Global",rank:"OT2",scores:{overall:8000,"1v1":7900,"1v2":7800,"2v2":7700,speedrun:7600,sd:7950},winRate:67,matches:340},
-  {id:11,username:"StormBlade",robloxId:"889900113",region:"Philippines",rank:"HT2",scores:{overall:7800,"1v1":7700,"1v2":7600,"2v2":7500,speedrun:7400,sd:7750},winRate:65,matches:280},
-  {id:12,username:"Specter",robloxId:"990011224",region:"Indonesia",rank:"HT2",scores:{overall:7600,"1v1":7500,"1v2":7400,"2v2":7300,speedrun:7200,sd:7550},winRate:63,matches:240},
-  {id:13,username:"Falcon",robloxId:"101122335",region:"Thailand",rank:"MT2",scores:{overall:7400,"1v1":7300,"1v2":7200,"2v2":7100,speedrun:7000,sd:7350},winRate:61,matches:210},
-  {id:14,username:"GhostWing",robloxId:"112233446",region:"Malaysia",rank:"MT2",scores:{overall:7200,"1v1":7100,"1v2":7000,"2v2":6900,speedrun:6800,sd:7150},winRate:59,matches:190},
-  {id:15,username:"TitanX",robloxId:"223344557",region:"Europe",rank:"LT2",scores:{overall:7000,"1v1":6900,"1v2":6800,"2v2":6700,speedrun:6600,sd:6950},winRate:57,matches:170},
+  {id:1,username:"Kaimc",robloxId:"2661309510",region:"Vietnam",rank:"OT1",scores:{overall:9800,solo:9750,dual:9700,speedrun:9600,war:9500,sd:9820},winRate:87,matches:1240},
+  {id:2,username:"Shadow",robloxId:"987654321",region:"Philippines",rank:"OT1",scores:{overall:9600,solo:9500,dual:9650,speedrun:9400,war:9300,sd:9550},winRate:84,matches:980},
+  {id:3,username:"Dragon",robloxId:"112233445",region:"Thailand",rank:"HT1",scores:{overall:9400,solo:9300,dual:9200,speedrun:9100,war:9000,sd:9350},winRate:81,matches:1100},
+  {id:4,username:"Alpha",robloxId:"556677889",region:"Indonesia",rank:"HT1",scores:{overall:9200,solo:9100,dual:9000,speedrun:8900,war:8800,sd:9150},winRate:79,matches:870},
+  {id:5,username:"NightKing",robloxId:"223344556",region:"Malaysia",rank:"MT1",scores:{overall:9000,solo:8900,dual:8800,speedrun:8700,war:8600,sd:8950},winRate:77,matches:760},
+  {id:6,username:"ViperX",robloxId:"334455667",region:"Singapore",rank:"MT1",scores:{overall:8800,solo:8700,dual:8600,speedrun:8500,war:8400,sd:8750},winRate:75,matches:650},
+  {id:7,username:"ZeroTwo",robloxId:"445566778",region:"North America",rank:"LT1",scores:{overall:8600,solo:8500,dual:8400,speedrun:8300,war:8200,sd:8550},winRate:73,matches:540},
+  {id:8,username:"Phoenix",robloxId:"556677880",region:"Europe",rank:"LT1",scores:{overall:8400,solo:8300,dual:8200,speedrun:8100,war:8000,sd:8350},winRate:71,matches:430},
+  {id:9,username:"BlazeFist",robloxId:"667788991",region:"Vietnam",rank:"OT2",scores:{overall:8200,solo:8100,dual:8000,speedrun:7900,war:7800,sd:8150},winRate:69,matches:390},
+  {id:10,username:"IceLord",robloxId:"778899002",region:"Global",rank:"OT2",scores:{overall:8000,solo:7900,dual:7800,speedrun:7700,war:7600,sd:7950},winRate:67,matches:340},
+  {id:11,username:"StormBlade",robloxId:"889900113",region:"Philippines",rank:"HT2",scores:{overall:7800,solo:7700,dual:7600,speedrun:7500,war:7400,sd:7750},winRate:65,matches:280},
+  {id:12,username:"Specter",robloxId:"990011224",region:"Indonesia",rank:"HT2",scores:{overall:7600,solo:7500,dual:7400,speedrun:7300,war:7200,sd:7550},winRate:63,matches:240},
+  {id:13,username:"Falcon",robloxId:"101122335",region:"Thailand",rank:"MT2",scores:{overall:7400,solo:7300,dual:7200,speedrun:7100,war:7000,sd:7350},winRate:61,matches:210},
+  {id:14,username:"GhostWing",robloxId:"112233446",region:"Malaysia",rank:"MT2",scores:{overall:7200,solo:7100,dual:7000,speedrun:6900,war:6800,sd:7150},winRate:59,matches:190},
+  {id:15,username:"TitanX",robloxId:"223344557",region:"Europe",rank:"LT2",scores:{overall:7000,solo:6900,dual:6800,speedrun:6700,war:6600,sd:6950},winRate:57,matches:170},
 ];
 
 const TIER_LIST_DATA = {
@@ -146,6 +146,16 @@ const TIER_LIST_DATA = {
     "MT2":["StormBlade"],
     "LT2":["Falcon"],
   },
+  War:{
+    "OT1":["Kaimc","Shadow"],
+    "HT1":["Dragon","Alpha"],
+    "MT1":["NightKing","ViperX"],
+    "LT1":["ZeroTwo","Phoenix"],
+    "OT2":["BlazeFist"],
+    "HT2":["Specter"],
+    "MT2":["Falcon"],
+    "LT2":["TitanX"],
+  },
 };
 
 const META_UPDATES = [
@@ -171,4 +181,3 @@ const AUDIT_LOGS = [
   {admin:"AdminUser",action:"Tier List Edit",player:"Dragon",old:"S",new:"A+",time:"1d ago"},
   {admin:"ModUser",action:"Report Approved",player:"Alpha",old:"-",new:"Wrong Region",time:"1d ago"},
 ];
-
