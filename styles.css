@@ -1455,13 +1455,9 @@ body::after {
 /* ============================================
    PERFORMANCE
    ============================================ */
-/* Let the browser skip layout/paint work for offscreen rows in long lists */
-.tier-column-body,
-.ranked-list {
-  content-visibility: auto;
-  contain-intrinsic-size: 0 400px;
-}
-
+/* Layout containment isolates each row's reflow/repaint from the rest of the
+   list without risking hidden content (content-visibility caused a visible
+   blank gap over the row, so it's intentionally not used here). */
 .player-row,
 .rank-row {
   contain: layout style;
