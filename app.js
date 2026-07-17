@@ -27,6 +27,15 @@ const TIER_META = {
   lt5: { label: 'Low Tier 5',  short: 'LT5', color: '#94C2FB' },
 };
 
+const TITLE_META = {
+  legend:      { label: 'Legend',      color: '#FFD700', glow: 'rgba(255,215,0,0.45)' },
+  grandmaster: { label: 'Grandmaster', color: '#FF3CAC', glow: 'rgba(255,60,172,0.4)' },
+  tester:      { label: 'Tester',      color: '#22D3EE', glow: 'rgba(34,211,238,0.4)' },
+  creator:     { label: 'Creator',     color: '#A855F7', glow: 'rgba(168,85,247,0.4)' },
+  veteran:     { label: 'Veteran',     color: '#34D399', glow: 'rgba(52,211,153,0.4)' },
+  rising:      { label: 'Rising Star', color: '#60A5FA', glow: 'rgba(96,165,250,0.4)' },
+};
+
 const REGION_FLAGS = {
   NA:  '🇺🇸',
   EU:  '🇪🇺',
@@ -52,12 +61,12 @@ const GAMEMODE_LABELS = {
 
 // ─── MOCK PLAYER DATABASE ───
 const PLAYERS = [
-  { id: 1, username: 'ArrilDrop', region: 'EU', status: 'stable', tiers: { vanilla: 'ht1', overall: 'ht1' }, discord: 'arrildrop#7912', youtube: 'https://youtube.com/@arrildrop', stats: { wr: '56%', elo: 2306, streak: 18 }, history: [{ from: 'HT1', to: 'HT1', mode: 'Vanilla', date: 'Feb 2026' }] },
-  { id: 2, username: 'Falig', region: 'SA', status: 'stable', tiers: { vanilla: 'ht1', overall: 'ht1' }, discord: 'falig#8359', youtube: null, stats: { wr: '91%', elo: 2359, streak: 18 }, history: [{ from: 'HT1', to: 'HT1', mode: 'Vanilla', date: 'Jul 2026' }] },
+  { id: 1, username: 'ArrilDrop', region: 'EU', status: 'stable', title: 'legend', verified: true, tiers: { vanilla: 'ht1', overall: 'ht1' }, discord: 'arrildrop#7912', youtube: 'https://youtube.com/@arrildrop', stats: { wr: '56%', elo: 2306, streak: 18 }, history: [{ from: 'HT1', to: 'HT1', mode: 'Vanilla', date: 'Feb 2026' }] },
+  { id: 2, username: 'Falig', region: 'SA', status: 'stable', title: 'tester', verified: true, tiers: { vanilla: 'ht1', overall: 'ht1' }, discord: 'falig#8359', youtube: null, stats: { wr: '91%', elo: 2359, streak: 18 }, history: [{ from: 'HT1', to: 'HT1', mode: 'Vanilla', date: 'Jul 2026' }] },
   { id: 3, username: 'QuailDrop', region: 'EU', status: 'stable', tiers: { vanilla: 'lt1', overall: 'lt1' }, discord: 'quaildrop#2584', youtube: 'https://youtube.com/@quaildrop', stats: { wr: '71%', elo: 2258, streak: 4 }, history: [{ from: 'HT2', to: 'LT1', mode: 'Vanilla', date: 'May 2026' }] },
   { id: 4, username: 'ZiblageRaid', region: 'SA', status: 'stable', tiers: { vanilla: 'lt1', axe: 'lt3', overall: 'lt3' }, discord: 'ziblageraid#6925', youtube: null, stats: { wr: '74%', elo: 2217, streak: 3 }, history: [{ from: 'HT1', to: 'LT1', mode: 'Vanilla', date: 'Jan 2026' }] },
   { id: 5, username: 'SwechetPvP', region: 'NA', status: 'stable', tiers: { vanilla: 'ht2', overall: 'ht2' }, discord: 'swechetpvp#6820', youtube: 'https://youtube.com/@swechetpvp', stats: { wr: '79%', elo: 2074, streak: 12 }, history: [{ from: 'LT2', to: 'HT2', mode: 'Vanilla', date: 'Jun 2026' }] },
-  { id: 6, username: 'WitGod', region: 'SA', status: 'up', tiers: { vanilla: 'ht2', overall: 'ht2' }, discord: 'witgod#4598', youtube: null, stats: { wr: '60%', elo: 2018, streak: 15 }, history: [] },
+  { id: 6, username: 'WitGod', region: 'SA', status: 'up', title: 'rising', verified: true, tiers: { vanilla: 'ht2', overall: 'ht2' }, discord: 'witgod#4598', youtube: null, stats: { wr: '60%', elo: 2018, streak: 15 }, history: [] },
   { id: 7, username: 'KqnieldPop', region: 'OCE', status: 'stable', tiers: { vanilla: 'lt2', overall: 'lt2' }, discord: 'kqnieldpop#6155', youtube: null, stats: { wr: '63%', elo: 1909, streak: 19 }, history: [{ from: 'LT3', to: 'LT2', mode: 'Vanilla', date: 'Apr 2026' }] },
   { id: 8, username: 'PotilageRaid', region: 'EU', status: 'stable', tiers: { vanilla: 'lt2', overall: 'lt2' }, discord: 'potilageraid#8019', youtube: null, stats: { wr: '65%', elo: 1993, streak: 18 }, history: [] },
   { id: 9, username: 'Axsnopig', region: 'SA', status: 'stable', tiers: { vanilla: 'ht3', overall: 'ht3' }, discord: 'axsnopig#3621', youtube: 'https://youtube.com/@axsnopig', stats: { wr: '53%', elo: 1826, streak: 4 }, history: [] },
@@ -74,7 +83,7 @@ const PLAYERS = [
   { id: 20, username: 'AnverRaider', region: 'EU', status: 'down', tiers: { vanilla: 'ht5', overall: 'ht5' }, discord: 'anverraider#2604', youtube: null, stats: { wr: '54%', elo: 1403, streak: 15 }, history: [{ from: 'LT4', to: 'HT5', mode: 'Vanilla', date: 'Jan 2026' }] },
   { id: 21, username: 'TNTshHit', region: 'OCE', status: 'stable', tiers: { vanilla: 'lt5', overall: 'lt5' }, discord: 'tntshhit#1035', youtube: 'https://youtube.com/@tntshhit', stats: { wr: '75%', elo: 1301, streak: 2 }, history: [] },
   { id: 22, username: 'NetlageRaid', region: 'AS', status: 'stable', tiers: { vanilla: 'lt5', overall: 'lt5' }, discord: 'netlageraid#5861', youtube: 'https://youtube.com/@netlageraid', stats: { wr: '85%', elo: 1313, streak: 16 }, history: [{ from: 'HT5', to: 'LT5', mode: 'Vanilla', date: 'May 2026' }] },
-  { id: 23, username: 'Flaus', region: 'SA', status: 'stable', tiers: { uhc: 'ht1', overall: 'ht1' }, discord: 'flaus#9320', youtube: 'https://youtube.com/@flaus', stats: { wr: '83%', elo: 2380, streak: 6 }, history: [{ from: 'HT1', to: 'HT1', mode: 'Uhc', date: 'Jan 2026' }] },
+  { id: 23, username: 'Flaus', region: 'SA', status: 'stable', title: 'legend', verified: true, tiers: { uhc: 'ht1', overall: 'ht1' }, discord: 'flaus#9320', youtube: 'https://youtube.com/@flaus', stats: { wr: '83%', elo: 2380, streak: 6 }, history: [{ from: 'HT1', to: 'HT1', mode: 'Uhc', date: 'Jan 2026' }] },
   { id: 24, username: 'RegpMaster', region: 'OCE', status: 'stable', tiers: { uhc: 'ht1' }, discord: 'regpmaster#1651', youtube: null, stats: { wr: '86%', elo: 2317, streak: 8 }, history: [] },
   { id: 25, username: 'AncShotKO', region: 'AS', status: 'down', tiers: { uhc: 'lt1', overall: 'lt1' }, discord: 'ancshotko#7484', youtube: 'https://youtube.com/@ancshotko', stats: { wr: '63%', elo: 2299, streak: 11 }, history: [{ from: 'HT2', to: 'LT1', mode: 'Uhc', date: 'Apr 2026' }] },
   { id: 26, username: 'Swoaum', region: 'NA', status: 'stable', tiers: { uhc: 'lt1', mace: 'ht2' }, discord: 'swoaum#4492', youtube: 'https://youtube.com/@swoaum', stats: { wr: '86%', elo: 2230, streak: 4 }, history: [{ from: 'LT1', to: 'LT1', mode: 'Uhc', date: 'Mar 2026' }] },
@@ -87,7 +96,7 @@ const PLAYERS = [
   { id: 33, username: 'PhaticalHit', region: 'OCE', status: 'stable', tiers: { uhc: 'ht3' }, discord: 'phaticalhit#5065', youtube: null, stats: { wr: '71%', elo: 1810, streak: 14 }, history: [{ from: 'LT2', to: 'HT3', mode: 'Uhc', date: 'Apr 2026' }] },
   { id: 34, username: 'Axsave', region: 'OCE', status: 'stable', tiers: { uhc: 'lt3' }, discord: 'axsave#4164', youtube: 'https://youtube.com/@axsave', stats: { wr: '64%', elo: 1740, streak: 8 }, history: [{ from: 'HT4', to: 'LT3', mode: 'Uhc', date: 'Jul 2026' }] },
   { id: 35, username: 'IroilDrop', region: 'AS', status: 'up', tiers: { uhc: 'lt3' }, discord: 'iroildrop#1452', youtube: null, stats: { wr: '75%', elo: 1688, streak: 18 }, history: [{ from: 'HT4', to: 'LT3', mode: 'Uhc', date: 'Feb 2026' }] },
-  { id: 36, username: 'RelmDestroyer', region: 'AS', status: 'up', tiers: { uhc: 'ht4', overall: 'ht4' }, discord: 'relmdestroyer#9379', youtube: null, stats: { wr: '70%', elo: 1584, streak: 14 }, history: [{ from: 'HT4', to: 'HT4', mode: 'Uhc', date: 'Mar 2026' }] },
+  { id: 36, username: 'RelmDestroyer', region: 'AS', status: 'up', title: 'rising', verified: true, tiers: { uhc: 'ht4', overall: 'ht4' }, discord: 'relmdestroyer#9379', youtube: null, stats: { wr: '70%', elo: 1584, streak: 14 }, history: [{ from: 'HT4', to: 'HT4', mode: 'Uhc', date: 'Mar 2026' }] },
   { id: 37, username: 'GolmDestroyer', region: 'NA', status: 'stable', tiers: { uhc: 'ht4' }, discord: 'golmdestroyer#2146', youtube: null, stats: { wr: '84%', elo: 1585, streak: 7 }, history: [] },
   { id: 38, username: 'PotieldPop', region: 'NA', status: 'up', tiers: { uhc: 'ht4' }, discord: 'potieldpop#7691', youtube: null, stats: { wr: '69%', elo: 1622, streak: 17 }, history: [{ from: 'LT4', to: 'HT4', mode: 'Uhc', date: 'May 2026' }] },
   { id: 39, username: 'CheientDebris', region: 'EU', status: 'up', tiers: { uhc: 'lt4' }, discord: 'cheientdebris#1006', youtube: null, stats: { wr: '69%', elo: 1504, streak: 13 }, history: [{ from: 'LT4', to: 'LT4', mode: 'Uhc', date: 'Apr 2026' }] },
@@ -97,8 +106,8 @@ const PLAYERS = [
   { id: 43, username: 'Potmpy', region: 'NA', status: 'up', tiers: { uhc: 'ht5' }, discord: 'potmpy#9486', youtube: null, stats: { wr: '64%', elo: 1463, streak: 6 }, history: [{ from: 'HT5', to: 'HT5', mode: 'Uhc', date: 'Jul 2026' }] },
   { id: 44, username: 'TecerRaider', region: 'SA', status: 'down', tiers: { uhc: 'lt5', overall: 'lt5' }, discord: 'tecerraider#8251', youtube: null, stats: { wr: '88%', elo: 1338, streak: 11 }, history: [] },
   { id: 45, username: 'FalimBreaker', region: 'SA', status: 'stable', tiers: { uhc: 'lt5' }, discord: 'falimbreaker#5050', youtube: null, stats: { wr: '60%', elo: 1372, streak: 16 }, history: [] },
-  { id: 46, username: 'SmapMaster', region: 'AS', status: 'stable', tiers: { pot: 'ht1', overall: 'ht1' }, discord: 'smapmaster#6238', youtube: null, stats: { wr: '68%', elo: 2433, streak: 8 }, history: [] },
-  { id: 47, username: 'TecstByte', region: 'EU', status: 'stable', tiers: { pot: 'ht1' }, discord: 'tecstbyte#7678', youtube: 'https://youtube.com/@tecstbyte', stats: { wr: '59%', elo: 2320, streak: 7 }, history: [{ from: 'HT2', to: 'HT1', mode: 'Pot', date: 'Apr 2026' }] },
+  { id: 46, username: 'SmapMaster', region: 'AS', status: 'stable', title: 'grandmaster', verified: true, tiers: { pot: 'ht1', overall: 'ht1' }, discord: 'smapmaster#6238', youtube: null, stats: { wr: '68%', elo: 2433, streak: 8 }, history: [] },
+  { id: 47, username: 'TecstByte', region: 'EU', status: 'stable', title: 'tester', verified: true, tiers: { pot: 'ht1' }, discord: 'tecstbyte#7678', youtube: 'https://youtube.com/@tecstbyte', stats: { wr: '59%', elo: 2320, streak: 7 }, history: [{ from: 'HT2', to: 'HT1', mode: 'Pot', date: 'Apr 2026' }] },
   { id: 48, username: 'WoostLooter', region: 'OCE', status: 'down', tiers: { pot: 'ht1' }, discord: 'woostlooter#7232', youtube: null, stats: { wr: '87%', elo: 2315, streak: 1 }, history: [{ from: 'LT1', to: 'HT1', mode: 'Pot', date: 'Mar 2026' }] },
   { id: 49, username: 'GroachAxe', region: 'SA', status: 'down', tiers: { pot: 'lt1', overall: 'lt1', sword: 'lt5' }, discord: 'groachaxe#8956', youtube: null, stats: { wr: '81%', elo: 2257, streak: 8 }, history: [{ from: 'HT2', to: 'LT1', mode: 'Pot', date: 'Jun 2026' }] },
   { id: 50, username: 'RodGod', region: 'OCE', status: 'down', tiers: { pot: 'lt1' }, discord: 'rodgod#7455', youtube: 'https://youtube.com/@rodgod', stats: { wr: '89%', elo: 2253, streak: 18 }, history: [{ from: 'HT1', to: 'LT1', mode: 'Pot', date: 'Jan 2026' }] },
@@ -125,8 +134,8 @@ const PLAYERS = [
   { id: 71, username: 'FislageRaid', region: 'NA', status: 'up', tiers: { pot: 'ht5' }, discord: 'fislageraid#4241', youtube: null, stats: { wr: '66%', elo: 1470, streak: 19 }, history: [{ from: 'HT5', to: 'HT5', mode: 'Pot', date: 'Jun 2026' }] },
   { id: 72, username: 'Blaaum', region: 'NA', status: 'stable', tiers: { pot: 'lt5' }, discord: 'blaaum#5728', youtube: null, stats: { wr: '69%', elo: 1314, streak: 20 }, history: [{ from: 'LT5', to: 'LT5', mode: 'Pot', date: 'Jun 2026' }] },
   { id: 73, username: 'UHCeRaider', region: 'AS', status: 'stable', tiers: { pot: 'lt5', sword: 'lt4' }, discord: 'uhceraider#1653', youtube: 'https://youtube.com/@uhceraider', stats: { wr: '81%', elo: 1318, streak: 15 }, history: [] },
-  { id: 74, username: 'QuikMcVids', region: 'EU', status: 'down', tiers: { nethop: 'ht1', overall: 'ht1' }, discord: 'quikmcvids#5415', youtube: null, stats: { wr: '86%', elo: 2364, streak: 19 }, history: [{ from: 'HT1', to: 'HT1', mode: 'NethOP', date: 'Apr 2026' }] },
-  { id: 75, username: 'AlcGrinder', region: 'AS', status: 'stable', tiers: { nethop: 'ht1' }, discord: 'alcgrinder#9056', youtube: null, stats: { wr: '87%', elo: 2432, streak: 14 }, history: [] },
+  { id: 74, username: 'QuikMcVids', region: 'EU', status: 'down', title: 'creator', verified: true, tiers: { nethop: 'ht1', overall: 'ht1' }, discord: 'quikmcvids#5415', youtube: null, stats: { wr: '86%', elo: 2364, streak: 19 }, history: [{ from: 'HT1', to: 'HT1', mode: 'NethOP', date: 'Apr 2026' }] },
+  { id: 75, username: 'AlcGrinder', region: 'AS', status: 'stable', title: 'tester', verified: true, tiers: { nethop: 'ht1' }, discord: 'alcgrinder#9056', youtube: null, stats: { wr: '87%', elo: 2432, streak: 14 }, history: [] },
   { id: 76, username: 'MagCannon', region: 'AS', status: 'stable', tiers: { nethop: 'ht1', overall: 'ht1' }, discord: 'magcannon#9117', youtube: null, stats: { wr: '56%', elo: 2420, streak: 6 }, history: [{ from: 'HT2', to: 'HT1', mode: 'NethOP', date: 'Jul 2026' }] },
   { id: 77, username: 'iMaieldPop', region: 'AS', status: 'stable', tiers: { nethop: 'lt1' }, discord: 'imaieldpop#1018', youtube: null, stats: { wr: '75%', elo: 2266, streak: 17 }, history: [] },
   { id: 78, username: 'EndCannon', region: 'NA', status: 'stable', tiers: { nethop: 'lt1', overall: 'lt1', smp: 'ht2' }, discord: 'endcannon#8242', youtube: null, stats: { wr: '73%', elo: 2288, streak: 20 }, history: [] },
@@ -150,8 +159,8 @@ const PLAYERS = [
   { id: 96, username: 'FalckClutch', region: 'EU', status: 'stable', tiers: { nethop: 'lt5' }, discord: 'falckclutch#6549', youtube: null, stats: { wr: '80%', elo: 1347, streak: 10 }, history: [] },
   { id: 97, username: 'DredeRunner', region: 'EU', status: 'down', tiers: { nethop: 'lt5' }, discord: 'drederunner#7464', youtube: null, stats: { wr: '75%', elo: 1339, streak: 18 }, history: [{ from: 'HT5', to: 'LT5', mode: 'NethOP', date: 'Apr 2026' }] },
   { id: 98, username: 'RegpWarrior', region: 'SA', status: 'stable', tiers: { nethop: 'lt5', pot: 'ht1' }, discord: 'regpwarrior#4830', youtube: 'https://youtube.com/@regpwarrior', stats: { wr: '90%', elo: 1327, streak: 12 }, history: [{ from: 'LT5', to: 'LT5', mode: 'NethOP', date: 'May 2026' }] },
-  { id: 99, username: 'BreerRaider', region: 'AS', status: 'up', tiers: { smp: 'ht1', overall: 'ht1' }, discord: 'breerraider#1609', youtube: 'https://youtube.com/@breerraider', stats: { wr: '57%', elo: 2316, streak: 5 }, history: [{ from: 'HT2', to: 'HT1', mode: 'Smp', date: 'Jan 2026' }] },
-  { id: 100, username: 'ChoundSlam', region: 'EU', status: 'stable', tiers: { smp: 'ht1', overall: 'ht1' }, discord: 'choundslam#3531', youtube: null, stats: { wr: '73%', elo: 2324, streak: 18 }, history: [] },
+  { id: 99, username: 'BreerRaider', region: 'AS', status: 'up', title: 'legend', verified: true, tiers: { smp: 'ht1', overall: 'ht1' }, discord: 'breerraider#1609', youtube: 'https://youtube.com/@breerraider', stats: { wr: '57%', elo: 2316, streak: 5 }, history: [{ from: 'HT2', to: 'HT1', mode: 'Smp', date: 'Jan 2026' }] },
+  { id: 100, username: 'ChoundSlam', region: 'EU', status: 'stable', title: 'veteran', verified: true, tiers: { smp: 'ht1', overall: 'ht1' }, discord: 'choundslam#3531', youtube: null, stats: { wr: '73%', elo: 2324, streak: 18 }, history: [] },
   { id: 101, username: 'DetCannon', region: 'AS', status: 'stable', tiers: { smp: 'lt1', overall: 'lt1' }, discord: 'detcannon#4868', youtube: null, stats: { wr: '73%', elo: 2275, streak: 7 }, history: [] },
   { id: 102, username: 'DritionRush', region: 'SA', status: 'down', tiers: { smp: 'lt1', nethop: 'ht2' }, discord: 'dritionrush#5520', youtube: 'https://youtube.com/@dritionrush', stats: { wr: '91%', elo: 2175, streak: 12 }, history: [{ from: 'HT1', to: 'LT1', mode: 'Smp', date: 'Jul 2026' }] },
   { id: 103, username: 'ThrberWolf', region: 'SA', status: 'down', tiers: { smp: 'ht2' }, discord: 'thrberwolf#3063', youtube: 'https://youtube.com/@thrberwolf', stats: { wr: '53%', elo: 2023, streak: 11 }, history: [] },
@@ -177,7 +186,7 @@ const PLAYERS = [
   { id: 123, username: 'iMamDestroyer', region: 'NA', status: 'stable', tiers: { smp: 'lt5', axe: 'lt3' }, discord: 'imamdestroyer#7484', youtube: null, stats: { wr: '87%', elo: 1326, streak: 13 }, history: [] },
   { id: 124, username: 'QuaeSlinger', region: 'AS', status: 'up', tiers: { smp: 'lt5' }, discord: 'quaeslinger#9693', youtube: null, stats: { wr: '54%', elo: 1375, streak: 17 }, history: [{ from: 'LT5', to: 'LT5', mode: 'Smp', date: 'Mar 2026' }] },
   { id: 125, username: 'ReldeRunner', region: 'AS', status: 'stable', tiers: { sword: 'ht1' }, discord: 'relderunner#2234', youtube: null, stats: { wr: '88%', elo: 2360, streak: 5 }, history: [{ from: 'HT2', to: 'HT1', mode: 'Sword', date: 'Apr 2026' }] },
-  { id: 126, username: 'DiastonePvP', region: 'SA', status: 'up', tiers: { sword: 'ht1' }, discord: 'diastonepvp#6179', youtube: null, stats: { wr: '89%', elo: 2444, streak: 11 }, history: [{ from: 'HT1', to: 'HT1', mode: 'Sword', date: 'Apr 2026' }] },
+  { id: 126, username: 'DiastonePvP', region: 'SA', status: 'up', title: 'grandmaster', verified: true, tiers: { sword: 'ht1' }, discord: 'diastonepvp#6179', youtube: null, stats: { wr: '89%', elo: 2444, streak: 11 }, history: [{ from: 'HT1', to: 'HT1', mode: 'Sword', date: 'Apr 2026' }] },
   { id: 127, username: 'Anvym', region: 'AS', status: 'stable', tiers: { sword: 'lt1' }, discord: 'anvym#1932', youtube: null, stats: { wr: '69%', elo: 2227, streak: 15 }, history: [{ from: 'HT2', to: 'LT1', mode: 'Sword', date: 'Jan 2026' }] },
   { id: 128, username: 'DetlDamage', region: 'OCE', status: 'stable', tiers: { sword: 'lt1', overall: 'lt1', vanilla: 'ht5' }, discord: 'detldamage#4084', youtube: null, stats: { wr: '85%', elo: 2173, streak: 2 }, history: [{ from: 'LT2', to: 'LT1', mode: 'Sword', date: 'May 2026' }] },
   { id: 129, username: 'FlastonePvP', region: 'NA', status: 'down', tiers: { sword: 'lt1' }, discord: 'flastonepvp#3827', youtube: null, stats: { wr: '71%', elo: 2188, streak: 3 }, history: [{ from: 'LT2', to: 'LT1', mode: 'Sword', date: 'Apr 2026' }] },
@@ -203,8 +212,8 @@ const PLAYERS = [
   { id: 149, username: 'ElyingObs', region: 'SA', status: 'stable', tiers: { sword: 'lt5' }, discord: 'elyingobs#1783', youtube: null, stats: { wr: '52%', elo: 1319, streak: 7 }, history: [] },
   { id: 150, username: 'Blorpness', region: 'AS', status: 'stable', tiers: { sword: 'lt5' }, discord: 'blorpness#7334', youtube: null, stats: { wr: '75%', elo: 1322, streak: 15 }, history: [{ from: 'LT5', to: 'LT5', mode: 'Sword', date: 'Apr 2026' }] },
   { id: 151, username: 'HeationRush', region: 'SA', status: 'stable', tiers: { sword: 'lt5', pot: 'ht2' }, discord: 'heationrush#3956', youtube: 'https://youtube.com/@heationrush', stats: { wr: '55%', elo: 1368, streak: 14 }, history: [{ from: 'LT5', to: 'LT5', mode: 'Sword', date: 'Jan 2026' }] },
-  { id: 152, username: 'ThrafeMaster', region: 'AS', status: 'stable', tiers: { axe: 'ht1', overall: 'ht1' }, discord: 'thrafemaster#6759', youtube: null, stats: { wr: '77%', elo: 2383, streak: 6 }, history: [{ from: 'LT1', to: 'HT1', mode: 'Axe', date: 'May 2026' }] },
-  { id: 153, username: 'DreeRaider', region: 'AS', status: 'stable', tiers: { axe: 'ht1' }, discord: 'dreeraider#8179', youtube: 'https://youtube.com/@dreeraider', stats: { wr: '60%', elo: 2411, streak: 1 }, history: [{ from: 'HT1', to: 'HT1', mode: 'Axe', date: 'Feb 2026' }] },
+  { id: 152, username: 'ThrafeMaster', region: 'AS', status: 'stable', title: 'legend', verified: true, tiers: { axe: 'ht1', overall: 'ht1' }, discord: 'thrafemaster#6759', youtube: null, stats: { wr: '77%', elo: 2383, streak: 6 }, history: [{ from: 'LT1', to: 'HT1', mode: 'Axe', date: 'May 2026' }] },
+  { id: 153, username: 'DreeRaider', region: 'AS', status: 'stable', title: 'creator', verified: true, tiers: { axe: 'ht1' }, discord: 'dreeraider#8179', youtube: 'https://youtube.com/@dreeraider', stats: { wr: '60%', elo: 2411, streak: 1 }, history: [{ from: 'HT1', to: 'HT1', mode: 'Axe', date: 'Feb 2026' }] },
   { id: 154, username: 'Pigeki', region: 'SA', status: 'stable', tiers: { axe: 'lt1' }, discord: 'pigeki#2259', youtube: null, stats: { wr: '78%', elo: 2242, streak: 12 }, history: [{ from: 'HT2', to: 'LT1', mode: 'Axe', date: 'Apr 2026' }] },
   { id: 155, username: 'AlcilDrop', region: 'EU', status: 'down', tiers: { axe: 'lt1', overall: 'lt1', nethop: 'ht1' }, discord: 'alcildrop#7340', youtube: null, stats: { wr: '51%', elo: 2230, streak: 6 }, history: [] },
   { id: 156, username: 'GolstonePvP', region: 'EU', status: 'down', tiers: { axe: 'lt1' }, discord: 'golstonepvp#3223', youtube: 'https://youtube.com/@golstonepvp', stats: { wr: '68%', elo: 2180, streak: 16 }, history: [] },
@@ -230,7 +239,7 @@ const PLAYERS = [
   { id: 176, username: 'Hitig', region: 'SA', status: 'stable', tiers: { axe: 'lt5' }, discord: 'hitig#1841', youtube: null, stats: { wr: '91%', elo: 1354, streak: 19 }, history: [{ from: 'LT5', to: 'LT5', mode: 'Axe', date: 'May 2026' }] },
   { id: 177, username: 'RodientDebris', region: 'EU', status: 'down', tiers: { axe: 'lt5' }, discord: 'rodientdebris#2800', youtube: null, stats: { wr: '65%', elo: 1360, streak: 2 }, history: [{ from: 'LT5', to: 'LT5', mode: 'Axe', date: 'Mar 2026' }] },
   { id: 178, username: 'TNTdCutter', region: 'OCE', status: 'stable', tiers: { mace: 'ht1' }, discord: 'tntdcutter#2020', youtube: null, stats: { wr: '89%', elo: 2338, streak: 16 }, history: [] },
-  { id: 179, username: 'WooherKing', region: 'OCE', status: 'stable', tiers: { mace: 'ht1', axe: 'lt1' }, discord: 'wooherking#9734', youtube: null, stats: { wr: '70%', elo: 2432, streak: 6 }, history: [{ from: 'LT1', to: 'HT1', mode: 'Mace', date: 'Jun 2026' }] },
+  { id: 179, username: 'WooherKing', region: 'OCE', status: 'stable', title: 'grandmaster', verified: true, tiers: { mace: 'ht1', axe: 'lt1' }, discord: 'wooherking#9734', youtube: null, stats: { wr: '70%', elo: 2432, streak: 6 }, history: [{ from: 'LT1', to: 'HT1', mode: 'Mace', date: 'Jun 2026' }] },
   { id: 180, username: 'DetdCharge', region: 'EU', status: 'down', tiers: { mace: 'ht1' }, discord: 'detdcharge#5876', youtube: null, stats: { wr: '67%', elo: 2367, streak: 18 }, history: [] },
   { id: 181, username: 'ShldCharge', region: 'AS', status: 'up', tiers: { mace: 'lt1', uhc: 'lt2' }, discord: 'shldcharge#9899', youtube: 'https://youtube.com/@shldcharge', stats: { wr: '67%', elo: 2275, streak: 10 }, history: [{ from: 'LT2', to: 'LT1', mode: 'Mace', date: 'Jul 2026' }] },
   { id: 182, username: 'IrodeRunner', region: 'AS', status: 'stable', tiers: { mace: 'lt1' }, discord: 'iroderunner#5201', youtube: null, stats: { wr: '55%', elo: 2238, streak: 12 }, history: [] },
@@ -386,7 +395,101 @@ function tierTagHtml(tierId) {
   return `<span class="tier-tag" style="color:${c};border-color:${c};background:${c}18">${meta.short}</span>`;
 }
 
+function verifiedBadgeHtml(player) {
+  if (!player.verified) return '';
+  return `<svg class="verified-badge" width="13" height="13" title="Verified"><use href="#icon-verified"/></svg>`;
+}
+
+function titleBadgeHtml(player) {
+  if (!player.title) return '';
+  const meta = TITLE_META[player.title];
+  if (!meta) return '';
+  return `<span class="player-title-badge" style="--title-color: ${meta.color}; --title-glow: ${meta.glow}">${meta.label}</span>`;
+}
+
+// Full name block: username + verified check on one line, title badge beneath it
+function playerNameBlockHtml(player) {
+  return `
+    <div class="player-row-name-line">
+      <span class="player-row-name">${player.username}</span>
+      ${verifiedBadgeHtml(player)}
+    </div>
+    ${player.title ? `<div class="player-row-title-line">${titleBadgeHtml(player)}</div>` : ''}
+  `;
+}
+
+function rankBadgeHtml(rank) {
+  if (rank === 1) return `<div class="rank-badge rank-gold">1</div>`;
+  if (rank === 2) return `<div class="rank-badge rank-silver">2</div>`;
+  if (rank === 3) return `<div class="rank-badge rank-bronze">3</div>`;
+  return `<div class="rank-badge">${rank}</div>`;
+}
+
 // ─── RENDERING ───
+
+// Overall tab: a single ranked #1-#N leaderboard, sorted by elo, mctiers.com-style but VIP.
+function renderRankedOverall(filtered, modeLabel) {
+  const ranked = [...filtered].sort((a, b) => b.stats.elo - a.stats.elo);
+
+  if (ranked.length === 0) {
+    tierlistContainer.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">
+          <svg width="48" height="48" style="color: var(--text-muted)"><use href="#icon-search"/></svg>
+        </div>
+        <div class="empty-state-text">No players found</div>
+        <div class="empty-state-sub">Try adjusting your search or filters</div>
+      </div>`;
+    return;
+  }
+
+  const rowsHTML = ranked.map((player, i) => {
+    const rank = i + 1;
+    const tierId = player.tiers.overall;
+    return `
+      <div class="rank-row rank-${rank <= 3 ? rank : 'std'}" data-player-id="${player.id}" role="button" tabindex="0"
+           style="animation-delay: ${Math.min(i, 40) * 18}ms">
+        ${rankBadgeHtml(rank)}
+        ${skinHtml(player.username)}
+        <div class="rank-row-info">
+          ${playerNameBlockHtml(player)}
+        </div>
+        <span class="rank-row-region">
+          <span class="player-row-region-flag">${REGION_FLAGS[player.region]}</span>
+          <span class="player-row-region-label">${player.region}</span>
+        </span>
+        ${tierTagHtml(tierId)}
+        <span class="rank-row-elo">${player.stats.elo}<small>elo</small></span>
+        <div class="player-row-status ${player.status}" title="${player.status}">
+          ${getStatusIcon(player.status)}
+        </div>
+      </div>`;
+  }).join('');
+
+  tierlistContainer.innerHTML = `
+    <div class="tierlist-card ranked-card">
+      <div class="tierlist-card-header">
+        <div>
+          <div class="tierlist-card-title">${modeLabel} Rankings</div>
+          <div class="tierlist-card-sub">Top ${ranked.length} players across all gamemodes</div>
+        </div>
+      </div>
+      <div class="ranked-list">
+        ${rowsHTML}
+      </div>
+    </div>`;
+
+  tierlistContainer.querySelectorAll('.rank-row').forEach((row) => {
+    const playerId = parseInt(row.dataset.playerId);
+    const player = PLAYERS.find((p) => p.id === playerId);
+    if (player) {
+      row.addEventListener('click', () => openModal(player, 'overall'));
+      row.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(player, 'overall'); }
+      });
+    }
+  });
+}
 
 function renderTierlist() {
   const allPlayers = getPlayersForMode(activeGamemode);
@@ -394,6 +497,12 @@ function renderTierlist() {
   const modeLabel = GAMEMODE_LABELS[activeGamemode] || activeGamemode;
 
   try {
+    if (activeGamemode === 'overall') {
+      renderRankedOverall(filtered, modeLabel);
+      totalPlayersEl.textContent = allPlayers.length;
+      return;
+    }
+
     // Build the tier columns grid
     let hasAny = false;
     let columnsHTML = '';
@@ -416,7 +525,7 @@ function renderTierlist() {
                  style="animation-delay: ${i * 30}ms">
               ${skinHtml(player.username)}
               <div class="player-row-info">
-                <div class="player-row-name">${player.username}</div>
+                ${playerNameBlockHtml(player)}
                 <div class="player-row-meta">
                   <span class="player-row-region">
                     <span class="player-row-region-flag">${REGION_FLAGS[player.region]}</span>
@@ -510,7 +619,12 @@ function openModal(player, mode) {
   const meta = TIER_META[tier];
 
   document.getElementById('modalAvatar').src = SKIN_URL_LG(player.username);
-  document.getElementById('modalName').textContent = player.username;
+  document.getElementById('modalName').innerHTML = `${player.username} ${verifiedBadgeHtml(player)}`;
+
+  const modalTitleEl = document.getElementById('modalPlayerTitle');
+  if (modalTitleEl) {
+    modalTitleEl.innerHTML = player.title ? titleBadgeHtml(player) : '';
+  }
 
   const tierEl = document.getElementById('modalTier');
   tierEl.innerHTML = tierTagHtml(tier) + `<span style="margin-left: 8px; color: var(--text-secondary)">${meta.label}</span>`;

@@ -653,6 +653,13 @@ body::after {
   flex: 1;
 }
 
+.player-row-name-line {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
 .player-row-name {
   font-size: 0.8rem;
   font-weight: 600;
@@ -661,6 +668,56 @@ body::after {
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1.2;
+}
+
+/* Verified checkmark — sits right beside the username */
+.verified-badge {
+  flex-shrink: 0;
+  color: #22D3EE;
+  filter: drop-shadow(0 0 3px rgba(34, 211, 238, 0.65));
+}
+
+/* Title badge line — sits directly under the username */
+.player-row-title-line {
+  margin-top: 2px;
+  line-height: 1;
+}
+
+.player-title-badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  color: var(--title-color);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--title-color) 20%, transparent), color-mix(in srgb, var(--title-color) 6%, transparent));
+  border: 1px solid color-mix(in srgb, var(--title-color) 45%, transparent);
+  text-shadow: 0 0 8px var(--title-glow);
+  box-shadow: 0 0 10px -2px var(--title-glow);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle shine sweep for that VIP polish */
+.player-title-badge::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.5), transparent);
+  animation: titleShine 3.2s ease-in-out infinite;
+}
+
+@keyframes titleShine {
+  0%   { left: -60%; }
+  50%  { left: 130%; }
+  100% { left: 130%; }
 }
 
 .player-row-meta {
@@ -728,6 +785,133 @@ body::after {
   color: var(--text-muted);
   font-size: 0.82rem;
   opacity: 0.5;
+}
+
+/* ============================================
+   RANKED OVERALL LEADERBOARD — #1-#N VIP list
+   ============================================ */
+.ranked-card .tierlist-card-header {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.ranked-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 0.75rem;
+}
+
+.rank-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 10px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid transparent;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+  opacity: 0;
+  animation: rowFadeIn 0.35s ease-out forwards;
+}
+
+.rank-row:hover {
+  background: rgba(255, 255, 255, 0.045);
+  border-color: var(--border-hover);
+  transform: translateX(2px);
+}
+
+/* Rank number badge */
+.rank-badge {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 800;
+  font-size: 0.8rem;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
+
+.rank-badge.rank-gold {
+  background: linear-gradient(145deg, #FFE68A, #D4A017);
+  color: #241900;
+  border-color: #FFD700;
+  box-shadow: 0 0 16px rgba(255, 215, 0, 0.55), inset 0 1px 0 rgba(255,255,255,0.5);
+}
+
+.rank-badge.rank-silver {
+  background: linear-gradient(145deg, #F1F5F9, #A0AEC0);
+  color: #1a1f26;
+  border-color: #E2E8F0;
+  box-shadow: 0 0 14px rgba(203, 213, 225, 0.45), inset 0 1px 0 rgba(255,255,255,0.5);
+}
+
+.rank-badge.rank-bronze {
+  background: linear-gradient(145deg, #E8A870, #A9612F);
+  color: #241500;
+  border-color: #CD7F32;
+  box-shadow: 0 0 14px rgba(205, 127, 50, 0.45), inset 0 1px 0 rgba(255,255,255,0.4);
+}
+
+/* Premium glowing frame for the top 3 rows */
+.rank-row.rank-1, .rank-row.rank-2, .rank-row.rank-3 {
+  padding: 0.7rem 1rem;
+}
+
+.rank-row.rank-1 {
+  background: linear-gradient(90deg, rgba(255, 215, 0, 0.1), rgba(255, 60, 172, 0.04) 60%, transparent);
+  border-color: rgba(255, 215, 0, 0.35);
+  box-shadow: 0 0 22px -6px rgba(255, 215, 0, 0.4);
+}
+
+.rank-row.rank-2 {
+  background: linear-gradient(90deg, rgba(226, 232, 240, 0.08), transparent 65%);
+  border-color: rgba(226, 232, 240, 0.25);
+}
+
+.rank-row.rank-3 {
+  background: linear-gradient(90deg, rgba(205, 127, 50, 0.09), transparent 65%);
+  border-color: rgba(205, 127, 50, 0.25);
+}
+
+.rank-row-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.rank-row-region {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.rank-row-elo {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  flex-shrink: 0;
+  min-width: 62px;
+  text-align: right;
+}
+
+.rank-row-elo small {
+  font-size: 0.55rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-left: 3px;
+  text-transform: uppercase;
 }
 
 /* ============================================
@@ -829,6 +1013,21 @@ body::after {
   font-weight: 700;
   font-size: 1.15rem;
   margin-bottom: 4px;
+}
+
+.modal-player-name .verified-badge {
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.modal-player-title {
+  margin-bottom: 8px;
+  line-height: 1;
+}
+
+.modal-player-title .player-title-badge {
+  font-size: 0.62rem;
+  padding: 0.2rem 0.55rem;
 }
 
 .modal-player-tier {
@@ -1126,6 +1325,10 @@ body::after {
     padding: 1.5rem 1rem;
     gap: 0.75rem;
   }
+
+  .rank-row { gap: 0.5rem; padding: 0.5rem 0.6rem; }
+  .rank-row-region .player-row-region-label { display: none; }
+  .rank-row-elo { min-width: 44px; font-size: 0.75rem; }
 }
 
 @media (max-width: 480px) {
