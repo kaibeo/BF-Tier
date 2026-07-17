@@ -34,6 +34,11 @@ const TITLE_META = {
   creator:     { label: 'Creator',     color: '#A855F7', glow: 'rgba(168,85,247,0.4)' },
   veteran:     { label: 'Veteran',     color: '#34D399', glow: 'rgba(52,211,153,0.4)' },
   rising:      { label: 'Rising Star', color: '#60A5FA', glow: 'rgba(96,165,250,0.4)' },
+  // Rank-based combat titles (Overall leaderboard top 5)
+  godcombat:    { label: 'God Combat',    color: '#FF2244', glow: 'rgba(255,34,68,0.5)' },
+  supercombat:  { label: 'Super Combat',  color: '#A855F7', glow: 'rgba(168,85,247,0.5)' },
+  hypercombat:  { label: 'Hyper Combat',  color: '#22D3EE', glow: 'rgba(34,211,238,0.5)' },
+  trypercombat: { label: 'Tryper Combat', color: '#34D399', glow: 'rgba(52,211,153,0.45)' },
 };
 
 const REGION_META = {
@@ -285,13 +290,14 @@ const totalPlayersEl = document.getElementById('totalPlayers');
 const modalOverlay = document.getElementById('playerModal');
 const modalClose = document.getElementById('modalClose');
 
-// ─── STARFIELD CANVAS ───
+// ─── STARFIELD CANVAS (optimized) ───
 function initStarfield() {
   const canvas = document.getElementById('starfield');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
   let stars = [];
-  const STAR_COUNT = 160;
+  const STAR_COUNT = window.innerWidth < 768 ? 70 : 110;
+  let resizeTimeout;
 
   function resize() {
     canvas.width = window.innerWidth;
@@ -309,10 +315,12 @@ function initStarfield() {
         opacity: Math.random() * 0.5 + 0.15,
         twinkleSpeed: Math.random() * 0.015 + 0.004,
         twinklePhase: Math.random() * Math.PI * 2,
+        hue: 260 + Math.random() * 30, // fixed per star — was re-randomized every frame before
       });
     }
   }
 
+  let rafId;
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const time = Date.now() * 0.001;
@@ -320,17 +328,16 @@ function initStarfield() {
     for (const star of stars) {
       const twinkle = Math.sin(time * star.twinkleSpeed * 10 + star.twinklePhase);
       const alpha = star.opacity + twinkle * 0.15;
-      const hue = 260 + Math.random() * 30;
 
       ctx.beginPath();
       ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-      ctx.fillStyle = `hsla(${hue}, 50%, 82%, ${Math.max(0.04, alpha)})`;
+      ctx.fillStyle = `hsla(${star.hue}, 50%, 82%, ${Math.max(0.04, alpha)})`;
       ctx.fill();
 
       if (star.size > 1.2) {
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.size * 2.5, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${hue}, 70%, 70%, ${Math.max(0.01, alpha * 0.06)})`;
+        ctx.fillStyle = `hsla(${star.hue}, 70%, 70%, ${Math.max(0.01, alpha * 0.06)})`;
         ctx.fill();
       }
 
@@ -340,13 +347,24 @@ function initStarfield() {
         star.x = Math.random() * canvas.width;
       }
     }
-    requestAnimationFrame(draw);
+    rafId = requestAnimationFrame(draw);
   }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      cancelAnimationFrame(rafId);
+    } else {
+      rafId = requestAnimationFrame(draw);
+    }
+  });
 
   resize();
   createStars();
   draw();
-  window.addEventListener('resize', () => { resize(); createStars(); });
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => { resize(); createStars(); }, 200);
+  });
 }
 
 // ─── HELPERS ───
@@ -401,40 +419,72 @@ function regionBadgeHtml(region) {
   return `<span class="region-badge" style="--region-color: ${c}">${region}</span>`;
 }
 
-function verifiedBadgeHtml(player) {
-  if (!player.verified) return '';
+function verifiedBadgeHtml(verified) {
+  if (!verified) return '';
   return `<svg class="verified-badge" width="13" height="13" title="Verified"><use href="#icon-verified"/></svg>`;
 }
 
-function titleBadgeHtml(player) {
-  if (!player.title) return '';
-  const meta = TITLE_META[player.title];
+function titleBadgeHtml(titleKey) {
+  const meta = TITLE_META[titleKey];
   if (!meta) return '';
   return `<span class="player-title-badge" style="--title-color: ${meta.color}; --title-glow: ${meta.glow}">${meta.label}</span>`;
 }
 
-// Full name block: username + verified check on one line, title badge beneath it
-function playerNameBlockHtml(player) {
+// Rank-based combat titles for the Overall leaderboard (top 5)
+function getRankTitle(rank) {
+  if (rank === 1) return 'godcombat';
+  if (rank === 2) return 'supercombat';
+  if (rank === 3) return 'hypercombat';
+  if (rank === 4 || rank === 5) return 'trypercombat';
+  return null;
+}
+
+// Name block: username, title badge, and verified tick all inline on the same line.
+// `overrides` lets the Overall leaderboard inject rank-based combat titles.
+function playerNameBlockHtml(player, overrides = {}) {
+  const title = overrides.title !== undefined ? overrides.title : player.title;
+  const verified = overrides.verified !== undefined ? overrides.verified : player.verified;
   return `
     <div class="player-row-name-line">
       <span class="player-row-name">${player.username}</span>
-      ${verifiedBadgeHtml(player)}
+      ${title ? titleBadgeHtml(title) : ''}
+      ${verifiedBadgeHtml(verified)}
     </div>
-    ${player.title ? `<div class="player-row-title-line">${titleBadgeHtml(player)}</div>` : ''}
   `;
 }
 
 function rankBadgeHtml(rank) {
-  if (rank === 1) return `<div class="rank-badge rank-gold">1</div>`;
-  if (rank === 2) return `<div class="rank-badge rank-silver">2</div>`;
-  if (rank === 3) return `<div class="rank-badge rank-bronze">3</div>`;
+  if (rank === 1) return `<div class="rank-badge rank-gold"><span class="rank-badge-num">1</span></div>`;
+  if (rank === 2) return `<div class="rank-badge rank-silver"><span class="rank-badge-num">2</span></div>`;
+  if (rank === 3) return `<div class="rank-badge rank-bronze"><span class="rank-badge-num">3</span></div>`;
   return `<div class="rank-badge">${rank}</div>`;
+}
+
+// Chips showing a player's tier in every other gamemode they're ranked in —
+// used to expand the Overall card/modal beyond just the overall tier.
+function otherGamemodeChipsHtml(player, excludeMode) {
+  const otherModes = GAMEMODES.filter((m) => m !== 'overall' && m !== excludeMode && player.tiers[m]);
+  if (otherModes.length === 0) return '';
+  return otherModes.map((m) => {
+    const tierId = player.tiers[m];
+    const meta = TIER_META[tierId];
+    if (!meta) return '';
+    return `<span class="mode-tier-chip" style="--chip-color:${meta.color}">
+      <span class="mode-tier-chip-mode">${GAMEMODE_LABELS[m]}</span>
+      <span class="mode-tier-chip-tier">${meta.short}</span>
+    </span>`;
+  }).join('');
 }
 
 // ─── RENDERING ───
 
 // Overall tab: a single ranked #1-#N leaderboard, sorted by elo, mctiers.com-style but VIP.
 function renderRankedOverall(filtered, modeLabel) {
+  // Global rank is computed from the unfiltered pool so a player's rank/title
+  // stays fixed even when the person is searching or filtering by region.
+  const globalRanking = [...getPlayersForMode('overall')].sort((a, b) => b.stats.elo - a.stats.elo);
+  const rankMap = new Map(globalRanking.map((p, idx) => [p.id, idx + 1]));
+
   const ranked = [...filtered].sort((a, b) => b.stats.elo - a.stats.elo);
 
   if (ranked.length === 0) {
@@ -450,15 +500,19 @@ function renderRankedOverall(filtered, modeLabel) {
   }
 
   const rowsHTML = ranked.map((player, i) => {
-    const rank = i + 1;
+    const rank = rankMap.get(player.id);
+    const rankTitle = getRankTitle(rank);
+    const nameOverrides = rankTitle ? { title: rankTitle, verified: true } : {};
     const tierId = player.tiers.overall;
+    const otherChips = otherGamemodeChipsHtml(player, 'overall');
     return `
       <div class="rank-row rank-${rank <= 3 ? rank : 'std'}" data-player-id="${player.id}" role="button" tabindex="0"
            style="animation-delay: ${Math.min(i, 40) * 18}ms">
         ${rankBadgeHtml(rank)}
         ${skinHtml(player.username)}
         <div class="rank-row-info">
-          ${playerNameBlockHtml(player)}
+          ${playerNameBlockHtml(player, nameOverrides)}
+          ${otherChips ? `<div class="rank-row-chips">${otherChips}</div>` : ''}
         </div>
         <span class="rank-row-region">${regionBadgeHtml(player.region)}</span>
         ${tierTagHtml(tierId)}
@@ -618,18 +672,44 @@ function openModal(player, mode) {
   const tier = player.tiers[mode];
   const meta = TIER_META[tier];
 
+  // If opened from the Overall tab, resolve the rank-based combat title
+  // the same way the leaderboard does, so it stays consistent everywhere.
+  let effectiveTitle = player.title;
+  let effectiveVerified = player.verified;
+  if (mode === 'overall') {
+    const globalRanking = [...getPlayersForMode('overall')].sort((a, b) => b.stats.elo - a.stats.elo);
+    const rank = globalRanking.findIndex((p) => p.id === player.id) + 1;
+    const rankTitle = getRankTitle(rank);
+    if (rankTitle) {
+      effectiveTitle = rankTitle;
+      effectiveVerified = true;
+    }
+  }
+
   document.getElementById('modalAvatar').src = SKIN_URL_LG(player.username);
-  document.getElementById('modalName').innerHTML = `${player.username} ${verifiedBadgeHtml(player)}`;
+  document.getElementById('modalName').innerHTML = `
+    <span>${player.username}</span>
+    ${effectiveTitle ? titleBadgeHtml(effectiveTitle) : ''}
+    ${verifiedBadgeHtml(effectiveVerified)}
+  `;
 
   const modalTitleEl = document.getElementById('modalPlayerTitle');
-  if (modalTitleEl) {
-    modalTitleEl.innerHTML = player.title ? titleBadgeHtml(player) : '';
-  }
+  if (modalTitleEl) modalTitleEl.innerHTML = '';
 
   const tierEl = document.getElementById('modalTier');
   tierEl.innerHTML = tierTagHtml(tier) + `<span style="margin-left: 8px; color: var(--text-secondary)">${meta.label}</span>`;
 
   document.getElementById('modalRegion').innerHTML = regionBadgeHtml(player.region);
+
+  // Other Gamemodes — expand the profile to show every tier this player holds
+  const gamemodesSection = document.getElementById('modalGamemodesSection');
+  const otherChipsModal = otherGamemodeChipsHtml(player, mode);
+  if (otherChipsModal) {
+    document.getElementById('modalGamemodes').innerHTML = otherChipsModal;
+    gamemodesSection.style.display = '';
+  } else {
+    gamemodesSection.style.display = 'none';
+  }
 
   // Stats
   document.getElementById('modalStats').innerHTML = `
