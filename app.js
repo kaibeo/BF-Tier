@@ -701,11 +701,23 @@ function openModal(player, mode) {
 
   document.getElementById('modalRegion').innerHTML = regionBadgeHtml(player.region);
 
-  // Other Gamemodes — expand the profile to show every tier this player holds
+  // All Gamemode Tiers — expand the profile to show every tier this player holds,
+  // including the mode the card/modal was opened from (highlighted).
   const gamemodesSection = document.getElementById('modalGamemodesSection');
-  const otherChipsModal = otherGamemodeChipsHtml(player, mode);
-  if (otherChipsModal) {
-    document.getElementById('modalGamemodes').innerHTML = otherChipsModal;
+  const allModes = GAMEMODES.filter((m) => player.tiers[m]);
+  if (allModes.length > 0) {
+    document.getElementById('modalGamemodes').innerHTML = allModes.map((m) => {
+      const tierId = player.tiers[m];
+      const tierMeta = TIER_META[tierId];
+      if (!tierMeta) return '';
+      const iconId = `icon-${m === 'nethop' ? 'nethpot' : m === 'overall' ? 'crosshair' : m}`;
+      return `
+        <div class="modal-gamemode-cell ${m === mode ? 'is-current' : ''}" style="--cell-color:${tierMeta.color}">
+          <svg class="modal-gamemode-cell-icon" width="18" height="18"><use href="#${iconId}"/></svg>
+          <span class="modal-gamemode-cell-label">${GAMEMODE_LABELS[m]}</span>
+          <span class="modal-gamemode-cell-tier">${tierMeta.short}</span>
+        </div>`;
+    }).join('');
     gamemodesSection.style.display = '';
   } else {
     gamemodesSection.style.display = 'none';

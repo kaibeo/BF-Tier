@@ -1017,6 +1017,57 @@ body::after {
   padding: 0.22rem 0.5rem;
 }
 
+/* Modal — full gamemode-tier grid (every mode the player is ranked in) */
+.modal-gamemode-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+.modal-gamemode-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0.65rem 0.5rem;
+  border-radius: var(--radius-md, 10px);
+  background: color-mix(in srgb, var(--cell-color) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--cell-color) 26%, transparent);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.modal-gamemode-cell:hover {
+  background: color-mix(in srgb, var(--cell-color) 14%, transparent);
+  border-color: color-mix(in srgb, var(--cell-color) 45%, transparent);
+}
+
+.modal-gamemode-cell-icon {
+  color: var(--cell-color);
+  opacity: 0.9;
+}
+
+.modal-gamemode-cell-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--text-secondary);
+}
+
+.modal-gamemode-cell-tier {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--cell-color);
+}
+
+.modal-gamemode-cell.is-current {
+  background: color-mix(in srgb, var(--cell-color) 18%, transparent);
+  border-color: color-mix(in srgb, var(--cell-color) 60%, transparent);
+}
+
 /* ============================================
    MODAL
    ============================================ */
@@ -1046,7 +1097,7 @@ body::after {
   border: 1px solid rgba(168, 85, 247, 0.15);
   border-radius: var(--radius-xl);
   width: 100%;
-  max-width: 520px;
+  max-width: 680px;
   max-height: 85vh;
   overflow-y: auto;
   transform: scale(0.9) translateY(25px);
