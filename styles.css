@@ -937,6 +937,119 @@ body::after {
   100% { left: 130%; }
 }
 
+/* ============================================
+   OVERALL TAB — expanded player cards
+   (mcpvp.club-style: header row + full tier-icon grid)
+   ============================================ */
+.overall-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0.75rem;
+}
+
+.overall-player-card {
+  border-radius: 12px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid transparent;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+  opacity: 0;
+  animation: rowFadeIn 0.35s ease-out forwards;
+  overflow: hidden;
+}
+
+.overall-player-card:hover {
+  background: rgba(255, 255, 255, 0.045);
+  border-color: var(--border-hover);
+}
+
+.overall-player-card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.9rem;
+}
+
+.overall-player-card-tiers {
+  padding: 0 0.9rem 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  margin-top: 2px;
+  padding-top: 0.65rem;
+}
+
+.overall-player-card-tiers-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+/* Same glowing top-3 treatment as the old rank rows, reused on the cards */
+.overall-player-card.rank-1, .overall-player-card.rank-2, .overall-player-card.rank-3 {
+  position: relative;
+}
+
+.overall-player-card.rank-1 {
+  background: linear-gradient(90deg, rgba(255, 215, 0, 0.1), rgba(255, 60, 172, 0.04) 60%, transparent);
+  border-color: rgba(255, 215, 0, 0.35);
+  animation: rowGlowGold 2.6s ease-in-out infinite;
+}
+
+.overall-player-card.rank-2 {
+  background: linear-gradient(90deg, rgba(226, 232, 240, 0.08), transparent 65%);
+  border-color: rgba(226, 232, 240, 0.25);
+  animation: rowGlowSilver 2.6s ease-in-out infinite;
+}
+
+.overall-player-card.rank-3 {
+  background: linear-gradient(90deg, rgba(205, 127, 50, 0.09), transparent 65%);
+  border-color: rgba(205, 127, 50, 0.25);
+  animation: rowGlowBronze 2.6s ease-in-out infinite;
+}
+
+/* Shared circular tier-icon grid — used by the Overall cards AND the profile modal */
+.tier-icon-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.tier-icon-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 52px;
+}
+
+.tier-icon-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cell-color);
+  background: color-mix(in srgb, var(--cell-color) 10%, #0A0818);
+  border: 2px solid var(--cell-color);
+  box-shadow: 0 0 10px -2px color-mix(in srgb, var(--cell-color) 60%, transparent);
+}
+
+.tier-icon-cell.is-current .tier-icon-circle {
+  box-shadow: 0 0 16px -1px color-mix(in srgb, var(--cell-color) 85%, transparent);
+}
+
+.tier-icon-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: var(--cell-color);
+}
+
 .rank-row-info {
   min-width: 0;
   flex: 1;

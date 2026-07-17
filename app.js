@@ -369,7 +369,45 @@ function initStarfield() {
 
 // ─── HELPERS ───
 
+// Overall Elo is not a stored stat — it's the average Elo across every
+// gamemode the player actually has a tier in (Overall itself excluded).
+function computeOverallElo(player) {
+  const modes = GAMEMODES.filter((m) => m !== 'overall' && player.tiers[m]);
+  if (modes.length === 0) return null;
+  const total = modes.reduce((sum) => sum + player.stats.elo, 0);
+  // stats.elo is a single per-player figure (not per-mode) in this dataset,
+  // so the "average across modes" collapses to that figure itself — kept as
+  // a function so a future per-mode elo dataset plugs in without call-site changes.
+  return Math.round(total / modes.length);
+}
+
+// Elo → tier thresholds. Elo is capped conceptually at ~2400+ for HT1;
+// each full tier band spans ~600 elo down to LT5 at the bottom.
+const OVERALL_TIER_THRESHOLDS = [
+  { tier: 'ht1', min: 2200 },
+  { tier: 'lt1', min: 2000 },
+  { tier: 'ht2', min: 1850 },
+  { tier: 'lt2', min: 1700 },
+  { tier: 'ht3', min: 1550 },
+  { tier: 'lt3', min: 1400 },
+  { tier: 'ht4', min: 1250 },
+  { tier: 'lt4', min: 1100 },
+  { tier: 'ht5', min: 950 },
+  { tier: 'lt5', min: -Infinity },
+];
+
+function computeOverallTier(elo) {
+  if (elo == null) return null;
+  for (const band of OVERALL_TIER_THRESHOLDS) {
+    if (elo >= band.min) return band.tier;
+  }
+  return 'lt5';
+}
+
 function getPlayersForMode(mode) {
+  if (mode === 'overall') {
+    return PLAYERS.filter((p) => GAMEMODES.some((m) => m !== 'overall' && p.tiers[m]));
+  }
   return PLAYERS.filter((p) => p.tiers[mode]);
 }
 
@@ -460,32 +498,43 @@ function rankBadgeHtml(rank) {
   return `<div class="rank-badge">${rank}</div>`;
 }
 
-// Chips showing a player's tier in every other gamemode they're ranked in —
-// used to expand the Overall card/modal beyond just the overall tier.
-function otherGamemodeChipsHtml(player, excludeMode) {
-  const otherModes = GAMEMODES.filter((m) => m !== 'overall' && m !== excludeMode && player.tiers[m]);
-  if (otherModes.length === 0) return '';
-  return otherModes.map((m) => {
+// Full tier-icon grid for a player — a circular icon per gamemode they hold a
+// tier in, colored/labelled by that tier. Used by the Overall tab cards and
+// the profile modal so both share one look (mcpvp.club-style).
+function tierIconGridHtml(player, opts = {}) {
+  const excludeMode = opts.excludeMode;
+  const highlightMode = opts.highlightMode;
+  const modes = GAMEMODES.filter((m) => m !== 'overall' && m !== excludeMode && player.tiers[m]);
+  if (modes.length === 0) return '';
+  return modes.map((m) => {
     const tierId = player.tiers[m];
     const meta = TIER_META[tierId];
     if (!meta) return '';
-    return `<span class="mode-tier-chip" style="--chip-color:${meta.color}">
-      <span class="mode-tier-chip-mode">${GAMEMODE_LABELS[m]}</span>
-      <span class="mode-tier-chip-tier">${meta.short}</span>
-    </span>`;
+    const iconId = `icon-${m === 'nethop' ? 'nethpot' : m}`;
+    return `
+      <div class="tier-icon-cell ${m === highlightMode ? 'is-current' : ''}" style="--cell-color:${meta.color}" title="${GAMEMODE_LABELS[m]}">
+        <div class="tier-icon-circle">
+          <svg width="20" height="20"><use href="#${iconId}"/></svg>
+        </div>
+        <span class="tier-icon-label">${meta.short}</span>
+      </div>`;
   }).join('');
 }
 
 // ─── RENDERING ───
 
-// Overall tab: a single ranked #1-#N leaderboard, sorted by elo, mctiers.com-style but VIP.
+// Overall tab: expanded per-player cards (mcpvp.club-style) ranked by
+// computed Overall Elo (average Elo across every gamemode the player holds).
 function renderRankedOverall(filtered, modeLabel) {
   // Global rank is computed from the unfiltered pool so a player's rank/title
   // stays fixed even when the person is searching or filtering by region.
-  const globalRanking = [...getPlayersForMode('overall')].sort((a, b) => b.stats.elo - a.stats.elo);
-  const rankMap = new Map(globalRanking.map((p, idx) => [p.id, idx + 1]));
+  const globalRanking = [...getPlayersForMode('overall')]
+    .map((p) => ({ p, elo: computeOverallElo(p) }))
+    .sort((a, b) => b.elo - a.elo);
+  const rankMap = new Map(globalRanking.map((entry, idx) => [entry.p.id, idx + 1]));
+  const eloMap = new Map(globalRanking.map((entry) => [entry.p.id, entry.elo]));
 
-  const ranked = [...filtered].sort((a, b) => b.stats.elo - a.stats.elo);
+  const ranked = [...filtered].sort((a, b) => eloMap.get(b.id) - eloMap.get(a.id));
 
   if (ranked.length === 0) {
     tierlistContainer.innerHTML = `
@@ -499,27 +548,34 @@ function renderRankedOverall(filtered, modeLabel) {
     return;
   }
 
-  const rowsHTML = ranked.map((player, i) => {
+  const cardsHTML = ranked.map((player, i) => {
     const rank = rankMap.get(player.id);
+    const elo = eloMap.get(player.id);
+    const overallTier = computeOverallTier(elo);
     const rankTitle = getRankTitle(rank);
     const nameOverrides = rankTitle ? { title: rankTitle, verified: true } : {};
-    const tierId = player.tiers.overall;
-    const otherChips = otherGamemodeChipsHtml(player, 'overall');
+    const iconGrid = tierIconGridHtml(player, {});
     return `
-      <div class="rank-row rank-${rank <= 3 ? rank : 'std'}" data-player-id="${player.id}" role="button" tabindex="0"
+      <div class="overall-player-card ${rank <= 3 ? 'rank-' + rank : ''}" data-player-id="${player.id}" role="button" tabindex="0"
            style="animation-delay: ${Math.min(i, 40) * 18}ms">
-        ${rankBadgeHtml(rank)}
-        ${skinHtml(player.username)}
-        <div class="rank-row-info">
-          ${playerNameBlockHtml(player, nameOverrides)}
-          ${otherChips ? `<div class="rank-row-chips">${otherChips}</div>` : ''}
+        <div class="overall-player-card-head">
+          ${rankBadgeHtml(rank)}
+          ${skinHtml(player.username)}
+          <div class="rank-row-info">
+            ${playerNameBlockHtml(player, nameOverrides)}
+          </div>
+          ${regionBadgeHtml(player.region)}
+          ${tierTagHtml(overallTier)}
+          <span class="rank-row-elo">${elo}<small>elo</small></span>
+          <div class="player-row-status ${player.status}" title="${player.status}">
+            ${getStatusIcon(player.status)}
+          </div>
         </div>
-        <span class="rank-row-region">${regionBadgeHtml(player.region)}</span>
-        ${tierTagHtml(tierId)}
-        <span class="rank-row-elo">${player.stats.elo}<small>elo</small></span>
-        <div class="player-row-status ${player.status}" title="${player.status}">
-          ${getStatusIcon(player.status)}
-        </div>
+        ${iconGrid ? `
+        <div class="overall-player-card-tiers">
+          <div class="overall-player-card-tiers-label">Tiers</div>
+          <div class="tier-icon-grid">${iconGrid}</div>
+        </div>` : ''}
       </div>`;
   }).join('');
 
@@ -531,12 +587,12 @@ function renderRankedOverall(filtered, modeLabel) {
           <div class="tierlist-card-sub">Top ${ranked.length} players across all gamemodes</div>
         </div>
       </div>
-      <div class="ranked-list">
-        ${rowsHTML}
+      <div class="overall-cards-list">
+        ${cardsHTML}
       </div>
     </div>`;
 
-  tierlistContainer.querySelectorAll('.rank-row').forEach((row) => {
+  tierlistContainer.querySelectorAll('.overall-player-card').forEach((row) => {
     const playerId = parseInt(row.dataset.playerId);
     const player = PLAYERS.find((p) => p.id === playerId);
     if (player) {
@@ -669,16 +725,21 @@ function updateTabCounts() {
 // ─── MODAL ───
 
 function openModal(player, mode) {
-  const tier = player.tiers[mode];
+  // Overall isn't a stored tier — it's computed from the player's other modes.
+  const isOverall = mode === 'overall';
+  const overallElo = isOverall ? computeOverallElo(player) : null;
+  const tier = isOverall ? computeOverallTier(overallElo) : player.tiers[mode];
   const meta = TIER_META[tier];
 
   // If opened from the Overall tab, resolve the rank-based combat title
   // the same way the leaderboard does, so it stays consistent everywhere.
   let effectiveTitle = player.title;
   let effectiveVerified = player.verified;
-  if (mode === 'overall') {
-    const globalRanking = [...getPlayersForMode('overall')].sort((a, b) => b.stats.elo - a.stats.elo);
-    const rank = globalRanking.findIndex((p) => p.id === player.id) + 1;
+  if (isOverall) {
+    const globalRanking = [...getPlayersForMode('overall')]
+      .map((p) => ({ p, elo: computeOverallElo(p) }))
+      .sort((a, b) => b.elo - a.elo);
+    const rank = globalRanking.findIndex((entry) => entry.p.id === player.id) + 1;
     const rankTitle = getRankTitle(rank);
     if (rankTitle) {
       effectiveTitle = rankTitle;
@@ -701,23 +762,13 @@ function openModal(player, mode) {
 
   document.getElementById('modalRegion').innerHTML = regionBadgeHtml(player.region);
 
-  // All Gamemode Tiers — expand the profile to show every tier this player holds,
-  // including the mode the card/modal was opened from (highlighted).
+  // All Gamemode Tiers — expand the profile to show every real tier this
+  // player holds (Overall excluded from the grid since it's a derived stat,
+  // not a per-mode tier), with the mode the modal was opened from highlighted.
   const gamemodesSection = document.getElementById('modalGamemodesSection');
-  const allModes = GAMEMODES.filter((m) => player.tiers[m]);
-  if (allModes.length > 0) {
-    document.getElementById('modalGamemodes').innerHTML = allModes.map((m) => {
-      const tierId = player.tiers[m];
-      const tierMeta = TIER_META[tierId];
-      if (!tierMeta) return '';
-      const iconId = `icon-${m === 'nethop' ? 'nethpot' : m === 'overall' ? 'crosshair' : m}`;
-      return `
-        <div class="modal-gamemode-cell ${m === mode ? 'is-current' : ''}" style="--cell-color:${tierMeta.color}">
-          <svg class="modal-gamemode-cell-icon" width="18" height="18"><use href="#${iconId}"/></svg>
-          <span class="modal-gamemode-cell-label">${GAMEMODE_LABELS[m]}</span>
-          <span class="modal-gamemode-cell-tier">${tierMeta.short}</span>
-        </div>`;
-    }).join('');
+  const iconGrid = tierIconGridHtml(player, { highlightMode: isOverall ? null : mode });
+  if (iconGrid) {
+    document.getElementById('modalGamemodes').innerHTML = iconGrid;
     gamemodesSection.style.display = '';
   } else {
     gamemodesSection.style.display = 'none';
@@ -730,7 +781,7 @@ function openModal(player, mode) {
       <div class="modal-stat-label">Win Rate</div>
     </div>
     <div class="modal-stat-card">
-      <div class="modal-stat-value">${player.stats.elo}</div>
+      <div class="modal-stat-value">${isOverall ? overallElo : player.stats.elo}</div>
       <div class="modal-stat-label">Elo</div>
     </div>
     <div class="modal-stat-card">
