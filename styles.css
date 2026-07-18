@@ -329,6 +329,12 @@ body::after {
   color: currentColor;
 }
 
+.gamemode-item-img {
+  image-rendering: pixelated;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
 .tab-count {
   font-size: 0.68rem;
   background: rgba(255, 255, 255, 0.08);

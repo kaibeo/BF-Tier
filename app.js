@@ -64,6 +64,33 @@ const GAMEMODE_LABELS = {
   mace:    'Mace',
 };
 
+// Real Minecraft item art (Minecraft Wiki CDN) representing each gamemode.
+// Falls back to the hand-drawn SVG icon (onerror below) if the image 404s
+// or the person is offline, so the UI never breaks.
+const GAMEMODE_ITEM_IMG = {
+  overall: 'https://minecraft.wiki/images/Invicon_Nether_Star.png',
+  vanilla: 'https://minecraft.wiki/images/Invicon_Golden_Apple.png',
+  uhc:     'https://minecraft.wiki/images/Invicon_Golden_Apple.png',
+  pot:     'https://minecraft.wiki/images/Invicon_Potion.png',
+  nethop:  'https://minecraft.wiki/images/Invicon_Ender_Pearl.png',
+  smp:     'https://minecraft.wiki/images/Invicon_Grass_Block.png',
+  sword:   'https://minecraft.wiki/images/Invicon_Diamond_Sword.png',
+  axe:     'https://minecraft.wiki/images/Invicon_Diamond_Axe.png',
+  mace:    'https://minecraft.wiki/images/Invicon_Mace.png',
+};
+
+// Renders the item image for a gamemode; if it fails to load, swaps in the
+// hand-drawn SVG icon (same one used elsewhere) so nothing ever breaks.
+function gamemodeItemImgHtml(mode, size, extraClass = '') {
+  const iconId = `icon-${mode === 'nethop' ? 'nethpot' : mode === 'overall' ? 'crosshair' : mode}`;
+  const imgUrl = GAMEMODE_ITEM_IMG[mode];
+  if (!imgUrl) {
+    return `<svg width="${size}" height="${size}" class="${extraClass}"><use href="#${iconId}"/></svg>`;
+  }
+  return `<img src="${imgUrl}" width="${size}" height="${size}" class="gamemode-item-img ${extraClass}" alt="${GAMEMODE_LABELS[mode] || mode}" loading="lazy"
+    onerror="this.outerHTML='<svg width=&quot;${size}&quot; height=&quot;${size}&quot; class=&quot;${extraClass}&quot;><use href=&quot;#${iconId}&quot;/></svg>'" />`;
+}
+
 // ─── MOCK PLAYER DATABASE ───
 const PLAYERS = [
   { id: 1, username: 'ArrilDrop', region: 'EU', status: 'stable', title: 'legend', verified: true, tiers: { vanilla: 'ht1', overall: 'ht1' }, discord: 'arrildrop#7912', youtube: 'https://youtube.com/@arrildrop', stats: { wr: '56%', elo: 2306, streak: 18 }, history: [{ from: 'HT1', to: 'HT1', mode: 'Vanilla', date: 'Feb 2026' }] },
@@ -498,9 +525,9 @@ function rankBadgeHtml(rank) {
   return `<div class="rank-badge">${rank}</div>`;
 }
 
-// Full tier-icon grid for a player — a circular icon per gamemode they hold a
-// tier in, colored/labelled by that tier. Used by the Overall tab cards and
-// the profile modal so both share one look (mcpvp.club-style).
+// Full tier-icon grid for a player — a real Minecraft item image per gamemode
+// they hold a tier in, colored/labelled by that tier. Used by the Overall tab
+// cards and the profile modal so both share one look (mcpvp.club-style).
 function tierIconGridHtml(player, opts = {}) {
   const excludeMode = opts.excludeMode;
   const highlightMode = opts.highlightMode;
@@ -510,11 +537,10 @@ function tierIconGridHtml(player, opts = {}) {
     const tierId = player.tiers[m];
     const meta = TIER_META[tierId];
     if (!meta) return '';
-    const iconId = `icon-${m === 'nethop' ? 'nethpot' : m}`;
     return `
       <div class="tier-icon-cell ${m === highlightMode ? 'is-current' : ''}" style="--cell-color:${meta.color}" title="${GAMEMODE_LABELS[m]}">
         <div class="tier-icon-circle">
-          <svg width="13" height="13"><use href="#${iconId}"/></svg>
+          ${gamemodeItemImgHtml(m, 15)}
         </div>
         <span class="tier-icon-label">${meta.short}</span>
       </div>`;
