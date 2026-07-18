@@ -54,14 +54,14 @@ const GAMEMODES = ['overall', 'vanilla', 'uhc', 'pot', 'nethop', 'smp', 'sword',
 
 const GAMEMODE_LABELS = {
   overall: 'Overall',
-  vanilla: 'Vanilla',
-  uhc:     'UHC',
-  pot:     'Pot',
-  nethop:  'NethOP',
-  smp:     'SMP',
-  sword:   'Sword',
-  axe:     'Axe',
-  mace:    'Mace',
+  vanilla: 'Crystal PvP',
+  uhc:     'UHC PvP',
+  pot:     'Pot PvP',
+  nethop:  'Neth PvP',
+  smp:     'Smp PvP',
+  sword:   'Sword PvP',
+  axe:     'Axe PvP',
+  mace:    'Mace PvP',
 };
 
 // Real Minecraft item art (Minecraft Wiki CDN) representing each gamemode.
