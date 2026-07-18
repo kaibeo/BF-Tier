@@ -68,8 +68,8 @@ const GAMEMODE_LABELS = {
 // Falls back to the hand-drawn SVG icon (onerror below) if the image 404s
 // or the person is offline, so the UI never breaks.
 const GAMEMODE_ITEM_IMG = {
-  overall: 'https://minecraft.wiki/images/Invicon_Nether_Star.png',
-  vanilla: 'https://minecraft.wiki/images/Invicon_End_Crystal.png',
+  overall: 'https://minecraft.wiki/images/Invicon_Diamond_Sword.png',
+  vanilla: 'https://minecraft.wiki/images/Invicon_End_Crystal.gif',
   uhc:     'https://minecraft.wiki/images/Invicon_Water_Bucket.png',
   pot:     'https://minecraft.wiki/images/Invicon_Potion_of_Healing.png',
   nethop:  'https://minecraft.wiki/images/Invicon_Netherite_Chestplate.png',

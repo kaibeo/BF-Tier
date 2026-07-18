@@ -190,6 +190,13 @@ body::after {
   animation: logoGlow 4s ease-in-out infinite alternate;
 }
 
+.logo-img {
+  height: 34px;
+  width: auto;
+  display: block;
+  filter: drop-shadow(0 0 14px rgba(255, 191, 92, 0.35));
+}
+
 @keyframes logoGlow {
   0%   { box-shadow: 0 0 18px rgba(168, 85, 247, 0.3); }
   100% { box-shadow: 0 0 28px rgba(168, 85, 247, 0.55), 0 0 60px rgba(120, 60, 220, 0.15); }
@@ -1680,8 +1687,7 @@ body::after {
 }
 
 @media (max-width: 480px) {
-  .logo-text { font-size: 0.95rem; }
-  .logo-icon { width: 32px; height: 32px; }
+  .logo-img { height: 26px; }
 
   .gamemode-tab span:not(.tab-count) { font-size: 0.76rem; }
   .tab-icon-svg { width: 16px; height: 16px; }
