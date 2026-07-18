@@ -12,193 +12,234 @@
   <style>
     body { overflow-x: hidden; }
 
-    .discord-page {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      z-index: 1;
-    }
+    /* ================= GALAXY LAYERS ================= */
+    .galaxy-layer { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
 
     .nebula-blob {
-      position: fixed;
+      position: absolute;
       border-radius: 50%;
-      filter: blur(90px);
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.55;
+      filter: blur(100px);
+      opacity: 0.5;
     }
-    .nebula-blob.b1 {
-      width: 480px; height: 480px;
-      top: -160px; left: -140px;
-      background: radial-gradient(circle, rgba(168,85,247,0.55), transparent 70%);
-      animation: driftA 16s ease-in-out infinite alternate;
-    }
-    .nebula-blob.b2 {
-      width: 420px; height: 420px;
-      bottom: -160px; right: -120px;
-      background: radial-gradient(circle, rgba(88,101,242,0.5), transparent 70%);
-      animation: driftB 18s ease-in-out infinite alternate;
-    }
-    .nebula-blob.b3 {
-      width: 300px; height: 300px;
-      top: 40%; right: 10%;
-      background: radial-gradient(circle, rgba(236,72,153,0.35), transparent 70%);
-      animation: driftC 20s ease-in-out infinite alternate;
-    }
-    @keyframes driftA { from { transform: translate(0,0) scale(1); } to { transform: translate(40px,30px) scale(1.08); } }
-    @keyframes driftB { from { transform: translate(0,0) scale(1); } to { transform: translate(-30px,-40px) scale(1.1); } }
-    @keyframes driftC { from { transform: translate(0,0) scale(1); } to { transform: translate(-25px,25px) scale(0.95); } }
+    .nebula-blob.b1 { width: 560px; height: 560px; top: -200px; left: -160px; background: radial-gradient(circle, rgba(168,85,247,0.55), transparent 70%); animation: driftA 18s ease-in-out infinite alternate; }
+    .nebula-blob.b2 { width: 480px; height: 480px; bottom: -200px; right: -140px; background: radial-gradient(circle, rgba(88,101,242,0.5), transparent 70%); animation: driftB 20s ease-in-out infinite alternate; }
+    .nebula-blob.b3 { width: 340px; height: 340px; top: 30%; right: 6%; background: radial-gradient(circle, rgba(236,72,153,0.32), transparent 70%); animation: driftC 22s ease-in-out infinite alternate; }
+    .nebula-blob.b4 { width: 300px; height: 300px; top: 55%; left: 4%; background: radial-gradient(circle, rgba(34,211,238,0.25), transparent 70%); animation: driftD 24s ease-in-out infinite alternate; }
+    @keyframes driftA { from { transform: translate(0,0) scale(1); } to { transform: translate(50px,40px) scale(1.1); } }
+    @keyframes driftB { from { transform: translate(0,0) scale(1); } to { transform: translate(-40px,-50px) scale(1.12); } }
+    @keyframes driftC { from { transform: translate(0,0) scale(1); } to { transform: translate(-30px,30px) scale(0.92); } }
+    @keyframes driftD { from { transform: translate(0,0) scale(1); } to { transform: translate(35px,-25px) scale(1.08); } }
 
-    .discord-card {
+    /* Floating planets (parallax via data-depth, moved in JS on scroll/mouse) */
+    .planet {
       position: relative;
-      max-width: 460px;
-      width: 100%;
-      background: rgba(9, 7, 18, 0.72);
-      border: 1px solid rgba(168, 85, 247, 0.22);
-      border-radius: 22px;
-      padding: 40px 30px 32px;
-      text-align: center;
-      backdrop-filter: blur(22px);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(168,85,247,0.06), 0 0 60px rgba(88,101,242,0.08);
-      animation: cardIn 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 50%;
+      pointer-events: none;
+      will-change: transform;
     }
-    @keyframes cardIn {
-      from { opacity: 0; transform: translateY(18px) scale(0.98); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
+    .planet-1 {
+      width: 130px; height: 130px;
+      background: radial-gradient(circle at 32% 30%, #c084fc, #6d28d9 55%, #2e1065 100%);
+      box-shadow: 0 0 50px rgba(168,85,247,0.45), inset -14px -14px 30px rgba(0,0,0,0.4);
+      animation: floatY1 9s ease-in-out infinite;
     }
-
-    .discord-card::before {
+    .planet-1::after {
       content: '';
       position: absolute;
-      inset: -1px;
-      border-radius: 22px;
-      padding: 1px;
-      background: linear-gradient(135deg, rgba(168,85,247,0.5), rgba(88,101,242,0.15), rgba(236,72,153,0.35));
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
-      opacity: 0.7;
-    }
-
-    .discord-card .discord-icon-wrap {
-      width: 64px;
-      height: 64px;
-      margin: 0 auto 20px;
+      width: 190px; height: 46px;
+      border: 2px solid rgba(196,181,253,0.35);
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(88,101,242,0.28), rgba(88,101,242,0.08));
-      border: 1px solid rgba(88,101,242,0.35);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #8b93ff;
-      box-shadow: 0 0 30px rgba(88,101,242,0.35);
-      animation: iconPulse 2.6s ease-in-out infinite;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) rotate(-18deg);
     }
-    @keyframes iconPulse {
-      0%, 100% { box-shadow: 0 0 24px rgba(88,101,242,0.3); }
-      50% { box-shadow: 0 0 42px rgba(88,101,242,0.55); }
+    .planet-2 {
+      width: 70px; height: 70px;
+      background: radial-gradient(circle at 35% 30%, #818cf8, #4338ca 60%, #1e1b4b 100%);
+      box-shadow: 0 0 40px rgba(99,102,241,0.4);
+      animation: floatY2 7s ease-in-out infinite;
+    }
+    .planet-3 {
+      width: 40px; height: 40px;
+      background: radial-gradient(circle at 35% 30%, #f472b6, #be185d 65%, #500724 100%);
+      box-shadow: 0 0 26px rgba(244,114,182,0.45);
+      animation: floatY3 6s ease-in-out infinite;
+    }
+    .planet-4 {
+      width: 90px; height: 90px;
+      background: radial-gradient(circle at 35% 30%, #67e8f9, #0e7490 60%, #083344 100%);
+      box-shadow: 0 0 34px rgba(34,211,238,0.4);
+      animation: floatY4 8s ease-in-out infinite;
+    }
+    @keyframes floatY1 { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-22px) rotate(4deg); } }
+    @keyframes floatY2 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(18px); } }
+    @keyframes floatY3 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+    @keyframes floatY4 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(16px); } }
+
+    @media (max-width: 768px) {
+      .planet-1 { width: 84px; height: 84px; }
+      .planet-1::after { width: 122px; height: 30px; }
+      .planet-2 { width: 46px; height: 46px; }
+      .planet-3 { width: 28px; height: 28px; }
+      .planet-4 { width: 58px; height: 58px; }
     }
 
-    .discord-card h1 {
+    #shootingStars, #starfield { z-index: 0; }
+
+    /* ================= LAYOUT ================= */
+    .discord-page { position: relative; z-index: 1; min-height: 100vh; padding: 64px 20px 60px; }
+    .discord-wrap { max-width: 980px; margin: 0 auto; }
+
+    /* Hero */
+    .discord-hero { text-align: center; margin-bottom: 52px; animation: fadeUp 0.6s cubic-bezier(0.16,1,0.3,1); }
+    .discord-hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 7px 16px; border-radius: 999px;
+      background: rgba(88,101,242,0.12); border: 1px solid rgba(88,101,242,0.3);
+      color: #a5b4fc; font-size: 12.5px; font-weight: 600; letter-spacing: 0.3px;
+      margin-bottom: 22px;
+    }
+    .discord-hero-badge .pulse-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: #22c55e;
+      box-shadow: 0 0 8px rgba(34,197,94,0.8);
+      animation: dotPulse 1.6s ease-in-out infinite;
+    }
+    @keyframes dotPulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.75); } }
+
+    .discord-hero-icon {
+      width: 92px; height: 92px; margin: 0 auto 24px;
+      border-radius: 26px;
+      background: radial-gradient(circle at 35% 30%, rgba(129,140,248,0.35), rgba(88,101,242,0.1));
+      border: 1px solid rgba(129,140,248,0.4);
+      display: flex; align-items: center; justify-content: center;
+      color: #a5b4fc;
+      box-shadow: 0 0 50px rgba(88,101,242,0.4), inset 0 0 30px rgba(129,140,248,0.15);
+      animation: heroIconPulse 3s ease-in-out infinite;
+    }
+    @keyframes heroIconPulse {
+      0%,100% { box-shadow: 0 0 40px rgba(88,101,242,0.35), inset 0 0 25px rgba(129,140,248,0.12); }
+      50% { box-shadow: 0 0 70px rgba(88,101,242,0.6), inset 0 0 35px rgba(129,140,248,0.22); }
+    }
+
+    .discord-hero h1 {
       font-family: 'Orbitron', sans-serif;
-      font-size: 20px;
-      margin: 0 0 8px;
-      background: linear-gradient(135deg, #fff, #c9b8ff);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      letter-spacing: 0.3px;
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 800;
+      margin: 0 0 14px;
+      background: linear-gradient(135deg, #fff 20%, #c9b8ff 60%, #818cf8 100%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      letter-spacing: 0.5px;
     }
-    .discord-card p {
+    .discord-hero p {
       color: rgba(255,255,255,0.55);
-      font-size: 13.5px;
-      line-height: 1.5;
-      margin: 0 0 28px;
+      font-size: 15px; line-height: 1.6;
+      max-width: 460px; margin: 0 auto;
     }
 
-    .discord-server-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      text-align: left;
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Server grid */
+    .discord-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
     }
-    .discord-server-btn {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      width: 100%;
-      padding: 13px 16px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 13px;
-      text-decoration: none;
-      transition: background 0.2s ease, border-color 0.2s ease, transform 0.18s ease, box-shadow 0.2s ease;
+
+    .server-card {
       position: relative;
+      display: flex; flex-direction: column; gap: 14px;
+      padding: 22px 20px;
+      background: rgba(9, 7, 18, 0.6);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      backdrop-filter: blur(18px);
+      text-decoration: none;
       overflow: hidden;
-    }
-    .discord-server-btn::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(168,85,247,0.14), rgba(88,101,242,0.1));
       opacity: 0;
-      transition: opacity 0.2s ease;
+      transform: translateY(20px);
+      animation: cardIn 0.55s cubic-bezier(0.16,1,0.3,1) forwards;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
     }
-    .discord-server-btn:hover {
-      border-color: rgba(168,85,247,0.4);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(88,101,242,0.18);
-    }
-    .discord-server-btn:hover::before { opacity: 1; }
-    .discord-server-btn > * { position: relative; z-index: 1; }
+    @keyframes cardIn { to { opacity: 1; transform: translateY(0); } }
 
-    .discord-server-icon {
-      width: 36px;
-      height: 36px;
-      flex-shrink: 0;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255,255,255,0.06);
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.06);
+    .server-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(150deg, var(--card-glow, rgba(168,85,247,0.16)), transparent 60%);
+      opacity: 0; transition: opacity 0.25s ease;
     }
-    .discord-server-icon img { width: 20px; height: 20px; object-fit: contain; }
-
-    .discord-server-name { flex: 1; color: #fff; font-weight: 600; font-size: 14.5px; }
-
-    .discord-server-arrow {
-      color: #a78bfa;
-      flex-shrink: 0;
-      transition: transform 0.2s ease;
+    .server-card::after {
+      content: '';
+      position: absolute; inset: -1px; border-radius: 18px; padding: 1px;
+      background: linear-gradient(135deg, var(--card-border, rgba(168,85,247,0.45)), transparent 55%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude;
+      opacity: 0; transition: opacity 0.25s ease;
     }
-    .discord-server-btn:hover .discord-server-arrow { transform: translateX(3px); }
+    .server-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.45), 0 0 30px var(--card-glow, rgba(168,85,247,0.2));
+    }
+    .server-card:hover::before, .server-card:hover::after { opacity: 1; }
+    .server-card > * { position: relative; z-index: 1; }
+
+    .server-card-top { display: flex; align-items: center; gap: 12px; }
+    .server-card-icon {
+      width: 46px; height: 46px; flex-shrink: 0; border-radius: 13px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--icon-bg, rgba(168,85,247,0.14));
+      border: 1px solid var(--icon-border, rgba(168,85,247,0.3));
+    }
+    .server-card-icon img { width: 24px; height: 24px; object-fit: contain; }
+    .server-card-name { color: #fff; font-weight: 700; font-size: 15.5px; }
+    .server-card-tag { color: rgba(255,255,255,0.4); font-size: 12px; margin-top: 2px; }
+
+    .server-card-cta {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 600;
+    }
+    .server-card-cta .arrow-circle {
+      width: 30px; height: 30px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--icon-bg, rgba(168,85,247,0.14));
+      color: var(--icon-color, #c084fc);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .server-card:hover .arrow-circle { transform: translateX(3px); background: var(--icon-border, rgba(168,85,247,0.35)); }
 
     .discord-back {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 26px;
-      color: rgba(255,255,255,0.4);
-      font-size: 13px;
-      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 44px;
+      color: rgba(255,255,255,0.4); font-size: 13.5px; text-decoration: none;
       transition: color 0.18s ease;
     }
-    .discord-back:hover { color: rgba(255,255,255,0.75); }
+    .discord-back:hover { color: rgba(255,255,255,0.8); }
+    .discord-back-wrap { text-align: center; }
   </style>
 </head>
 <body>
 
   <canvas id="starfield"></canvas>
+  <canvas id="shootingStars"></canvas>
 
-  <div class="nebula-blob b1"></div>
-  <div class="nebula-blob b2"></div>
-  <div class="nebula-blob b3"></div>
+  <div class="galaxy-layer">
+    <div class="nebula-blob b1"></div>
+    <div class="nebula-blob b2"></div>
+    <div class="nebula-blob b3"></div>
+    <div class="nebula-blob b4"></div>
+    <div class="planet-wrap" id="planet1" style="position:absolute; top:10%; left:8%;">
+      <div class="planet planet-1"></div>
+    </div>
+    <div class="planet-wrap" id="planet2" style="position:absolute; top:62%; right:10%;">
+      <div class="planet planet-2"></div>
+    </div>
+    <div class="planet-wrap" id="planet3" style="position:absolute; top:20%; right:20%;">
+      <div class="planet planet-3"></div>
+    </div>
+    <div class="planet-wrap" id="planet4" style="position:absolute; bottom:8%; left:12%;">
+      <div class="planet planet-4"></div>
+    </div>
+  </div>
 
   <svg xmlns="http://www.w3.org/2000/svg" style="display:none;">
     <symbol id="icon-discord" viewBox="0 0 24 24" fill="currentColor">
@@ -213,88 +254,178 @@
   </svg>
 
   <div class="discord-page">
-    <div class="discord-card">
-      <div class="discord-icon-wrap">
-        <svg width="32" height="32"><use href="#icon-discord"/></svg>
-      </div>
-      <h1>Join an RC Tier Discord</h1>
-      <p>Each gamemode has its own server. Pick the one you want to join below.</p>
+    <div class="discord-wrap">
 
-      <div class="discord-server-list">
-        <a href="https://discord.gg/vtaMhKxf8b" target="_blank" rel="noopener noreferrer" class="discord-server-btn">
-          <span class="discord-server-icon"><img src="https://minecraft.wiki/images/Invicon_End_Crystal.gif" alt="" /></span>
-          <span class="discord-server-name">Crystal PvP</span>
-          <svg class="discord-server-arrow" width="18" height="18"><use href="#icon-arrow-right"/></svg>
-        </a>
-        <a href="https://discord.gg/UHC-INVITE" target="_blank" rel="noopener noreferrer" class="discord-server-btn">
-          <span class="discord-server-icon"><img src="https://minecraft.wiki/images/Invicon_Water_Bucket.png" alt="" /></span>
-          <span class="discord-server-name">UHC PvP</span>
-          <svg class="discord-server-arrow" width="18" height="18"><use href="#icon-arrow-right"/></svg>
-        </a>
-        <a href="https://discord.gg/POT-INVITE" target="_blank" rel="noopener noreferrer" class="discord-server-btn">
-          <span class="discord-server-icon"><img src="https://minecraft.wiki/images/Invicon_Potion_of_Healing.png" alt="" /></span>
-          <span class="discord-server-name">Pot PvP</span>
-          <svg class="discord-server-arrow" width="18" height="18"><use href="#icon-arrow-right"/></svg>
-        </a>
-        <a href="https://discord.gg/wvUKArJHWC" target="_blank" rel="noopener noreferrer" class="discord-server-btn">
-          <span class="discord-server-icon"><img src="https://minecraft.wiki/images/Invicon_Netherite_Chestplate.png" alt="" /></span>
-          <span class="discord-server-name">Neth PvP</span>
-          <svg class="discord-server-arrow" width="18" height="18"><use href="#icon-arrow-right"/></svg>
-        </a>
-        <a href="https://discord.gg/SMP-INVITE" target="_blank" rel="noopener noreferrer" class="discord-server-btn">
-          <span class="discord-server-icon"><img src="https://minecraft.wiki/images/Invicon_Shield.png" alt="" /></span>
-          <span class="discord-server-name">Smp PvP</span>
-          <svg class="discord-server-arrow" width="18" height="18"><use href="#icon-arrow-right"/></svg>
-        </a>
-        <a href="https://discord.gg/SWORD-INVITE" target="_blank" rel="noopener noreferrer" class="discord-server-btn">
-          <span class="discord-server-icon"><img src="https://minecraft.wiki/images/Invicon_Diamond_Sword.png" alt="" /></span>
-          <span class="discord-server-name">Sword PvP</span>
-          <svg class="discord-server-arrow" width="18" height="18"><use href="#icon-arrow-right"/></svg>
-        </a>
-        <a href="https://discord.gg/AXE-INVITE" target="_blank" rel="noopener noreferrer" class="discord-server-btn">
-          <span class="discord-server-icon"><img src="https://minecraft.wiki/images/Invicon_Diamond_Axe.png" alt="" /></span>
-          <span class="discord-server-name">Axe PvP</span>
-          <svg class="discord-server-arrow" width="18" height="18"><use href="#icon-arrow-right"/></svg>
-        </a>
-        <a href="https://discord.gg/MACE-INVITE" target="_blank" rel="noopener noreferrer" class="discord-server-btn">
-          <span class="discord-server-icon"><img src="https://minecraft.wiki/images/Invicon_Mace.png" alt="" /></span>
-          <span class="discord-server-name">Mace PvP</span>
-          <svg class="discord-server-arrow" width="18" height="18"><use href="#icon-arrow-right"/></svg>
-        </a>
+      <div class="discord-hero">
+        <div class="discord-hero-badge"><span class="pulse-dot"></span> 8 servers online</div>
+        <div class="discord-hero-icon">
+          <svg width="42" height="42"><use href="#icon-discord"/></svg>
+        </div>
+        <h1>Join an RC Tier Discord</h1>
+        <p>Each gamemode has its own dedicated server. Pick the one that matches your grind and jump in.</p>
       </div>
 
-      <a href="index.html" class="discord-back">
-        <svg width="14" height="14"><use href="#icon-arrow-left"/></svg>
-        Back to RC Tier
-      </a>
+      <div class="discord-grid" id="serverGrid">
+        <a href="https://discord.gg/vtaMhKxf8b" target="_blank" rel="noopener noreferrer" class="server-card"
+           style="--card-glow: rgba(236,72,153,0.22); --card-border: rgba(236,72,153,0.5); --icon-bg: rgba(236,72,153,0.14); --icon-border: rgba(236,72,153,0.35); --icon-color: #f472b6;">
+          <div class="server-card-top">
+            <div class="server-card-icon"><img src="https://minecraft.wiki/images/Invicon_End_Crystal.gif" alt="" /></div>
+            <div>
+              <div class="server-card-name">Crystal PvP</div>
+              <div class="server-card-tag">Discord community</div>
+            </div>
+          </div>
+          <div class="server-card-cta">
+            Join server
+            <span class="arrow-circle"><svg width="16" height="16"><use href="#icon-arrow-right"/></svg></span>
+          </div>
+        </a>
+
+        <a href="https://discord.gg/UHC-INVITE" target="_blank" rel="noopener noreferrer" class="server-card"
+           style="--card-glow: rgba(59,130,246,0.22); --card-border: rgba(59,130,246,0.5); --icon-bg: rgba(59,130,246,0.14); --icon-border: rgba(59,130,246,0.35); --icon-color: #60a5fa;">
+          <div class="server-card-top">
+            <div class="server-card-icon"><img src="https://minecraft.wiki/images/Invicon_Water_Bucket.png" alt="" /></div>
+            <div>
+              <div class="server-card-name">UHC PvP</div>
+              <div class="server-card-tag">Discord community</div>
+            </div>
+          </div>
+          <div class="server-card-cta">
+            Join server
+            <span class="arrow-circle"><svg width="16" height="16"><use href="#icon-arrow-right"/></svg></span>
+          </div>
+        </a>
+
+        <a href="https://discord.gg/POT-INVITE" target="_blank" rel="noopener noreferrer" class="server-card"
+           style="--card-glow: rgba(236,72,153,0.22); --card-border: rgba(236,72,153,0.5); --icon-bg: rgba(236,72,153,0.14); --icon-border: rgba(236,72,153,0.35); --icon-color: #f472b6;">
+          <div class="server-card-top">
+            <div class="server-card-icon"><img src="https://minecraft.wiki/images/Invicon_Potion_of_Healing.png" alt="" /></div>
+            <div>
+              <div class="server-card-name">Pot PvP</div>
+              <div class="server-card-tag">Discord community</div>
+            </div>
+          </div>
+          <div class="server-card-cta">
+            Join server
+            <span class="arrow-circle"><svg width="16" height="16"><use href="#icon-arrow-right"/></svg></span>
+          </div>
+        </a>
+
+        <a href="https://discord.gg/wvUKArJHWC" target="_blank" rel="noopener noreferrer" class="server-card"
+           style="--card-glow: rgba(168,85,247,0.22); --card-border: rgba(168,85,247,0.5); --icon-bg: rgba(168,85,247,0.14); --icon-border: rgba(168,85,247,0.35); --icon-color: #c084fc;">
+          <div class="server-card-top">
+            <div class="server-card-icon"><img src="https://minecraft.wiki/images/Invicon_Netherite_Chestplate.png" alt="" /></div>
+            <div>
+              <div class="server-card-name">Neth PvP</div>
+              <div class="server-card-tag">Discord community</div>
+            </div>
+          </div>
+          <div class="server-card-cta">
+            Join server
+            <span class="arrow-circle"><svg width="16" height="16"><use href="#icon-arrow-right"/></svg></span>
+          </div>
+        </a>
+
+        <a href="https://discord.gg/SMP-INVITE" target="_blank" rel="noopener noreferrer" class="server-card"
+           style="--card-glow: rgba(34,197,94,0.22); --card-border: rgba(34,197,94,0.5); --icon-bg: rgba(34,197,94,0.14); --icon-border: rgba(34,197,94,0.35); --icon-color: #4ade80;">
+          <div class="server-card-top">
+            <div class="server-card-icon"><img src="https://minecraft.wiki/images/Invicon_Shield.png" alt="" /></div>
+            <div>
+              <div class="server-card-name">Smp PvP</div>
+              <div class="server-card-tag">Discord community</div>
+            </div>
+          </div>
+          <div class="server-card-cta">
+            Join server
+            <span class="arrow-circle"><svg width="16" height="16"><use href="#icon-arrow-right"/></svg></span>
+          </div>
+        </a>
+
+        <a href="https://discord.gg/SWORD-INVITE" target="_blank" rel="noopener noreferrer" class="server-card"
+           style="--card-glow: rgba(239,68,68,0.22); --card-border: rgba(239,68,68,0.5); --icon-bg: rgba(239,68,68,0.14); --icon-border: rgba(239,68,68,0.35); --icon-color: #f87171;">
+          <div class="server-card-top">
+            <div class="server-card-icon"><img src="https://minecraft.wiki/images/Invicon_Diamond_Sword.png" alt="" /></div>
+            <div>
+              <div class="server-card-name">Sword PvP</div>
+              <div class="server-card-tag">Discord community</div>
+            </div>
+          </div>
+          <div class="server-card-cta">
+            Join server
+            <span class="arrow-circle"><svg width="16" height="16"><use href="#icon-arrow-right"/></svg></span>
+          </div>
+        </a>
+
+        <a href="https://discord.gg/AXE-INVITE" target="_blank" rel="noopener noreferrer" class="server-card"
+           style="--card-glow: rgba(249,115,22,0.22); --card-border: rgba(249,115,22,0.5); --icon-bg: rgba(249,115,22,0.14); --icon-border: rgba(249,115,22,0.35); --icon-color: #fb923c;">
+          <div class="server-card-top">
+            <div class="server-card-icon"><img src="https://minecraft.wiki/images/Invicon_Diamond_Axe.png" alt="" /></div>
+            <div>
+              <div class="server-card-name">Axe PvP</div>
+              <div class="server-card-tag">Discord community</div>
+            </div>
+          </div>
+          <div class="server-card-cta">
+            Join server
+            <span class="arrow-circle"><svg width="16" height="16"><use href="#icon-arrow-right"/></svg></span>
+          </div>
+        </a>
+
+        <a href="https://discord.gg/MACE-INVITE" target="_blank" rel="noopener noreferrer" class="server-card"
+           style="--card-glow: rgba(168,162,158,0.22); --card-border: rgba(168,162,158,0.5); --icon-bg: rgba(168,162,158,0.14); --icon-border: rgba(168,162,158,0.35); --icon-color: #d6d3d1;">
+          <div class="server-card-top">
+            <div class="server-card-icon"><img src="https://minecraft.wiki/images/Invicon_Mace.png" alt="" /></div>
+            <div>
+              <div class="server-card-name">Mace PvP</div>
+              <div class="server-card-tag">Discord community</div>
+            </div>
+          </div>
+          <div class="server-card-cta">
+            Join server
+            <span class="arrow-circle"><svg width="16" height="16"><use href="#icon-arrow-right"/></svg></span>
+          </div>
+        </a>
+      </div>
+
+      <div class="discord-back-wrap">
+        <a href="index.html" class="discord-back">
+          <svg width="14" height="14"><use href="#icon-arrow-left"/></svg>
+          Back to RC Tier
+        </a>
+      </div>
+
     </div>
   </div>
 
   <script>
+    // Stagger card entrance animation
+    document.querySelectorAll('.server-card').forEach((card, i) => {
+      card.style.animationDelay = (i * 0.06) + 's';
+    });
+
+    // Starfield
     (function () {
       const canvas = document.getElementById('starfield');
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
       let stars = [];
-      const STAR_COUNT = window.innerWidth < 768 ? 70 : 120;
+      const STAR_COUNT = window.innerWidth < 768 ? 90 : 160;
       let resizeTimeout;
 
       function resize() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
       }
-
       function initStars() {
         stars = Array.from({ length: STAR_COUNT }, () => ({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          r: Math.random() * 1.4 + 0.3,
+          r: Math.random() * 1.5 + 0.3,
           alpha: Math.random() * 0.6 + 0.2,
           twinkleSpeed: Math.random() * 0.015 + 0.004,
           twinkleDir: Math.random() > 0.5 ? 1 : -1,
         }));
       }
-
       function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         for (const s of stars) {
@@ -307,18 +438,97 @@
         }
         requestAnimationFrame(draw);
       }
-
-      resize();
-      initStars();
-      draw();
-
+      resize(); initStars(); draw();
       window.addEventListener('resize', () => {
         clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-          resize();
-          initStars();
-        }, 200);
+        resizeTimeout = setTimeout(() => { resize(); initStars(); }, 200);
       });
+    })();
+
+    // Shooting stars
+    (function () {
+      const canvas = document.getElementById('shootingStars');
+      if (!canvas) return;
+      canvas.style.position = 'fixed';
+      canvas.style.top = '0';
+      canvas.style.left = '0';
+      canvas.style.pointerEvents = 'none';
+      const ctx = canvas.getContext('2d');
+      let meteors = [];
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      function spawnMeteor() {
+        const startX = Math.random() * canvas.width * 0.6 + canvas.width * 0.2;
+        meteors.push({
+          x: startX,
+          y: -20,
+          len: Math.random() * 90 + 60,
+          speed: Math.random() * 7 + 6,
+          angle: Math.PI / 4 + (Math.random() * 0.15 - 0.075),
+          life: 1,
+        });
+      }
+
+      function loop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (Math.random() < 0.018) spawnMeteor();
+
+        meteors = meteors.filter((m) => m.life > 0 && m.y < canvas.height + 100);
+        for (const m of meteors) {
+          const dx = Math.cos(m.angle) * m.speed;
+          const dy = Math.sin(m.angle) * m.speed;
+          m.x += dx;
+          m.y += dy;
+          m.life -= 0.006;
+
+          const tailX = m.x - Math.cos(m.angle) * m.len;
+          const tailY = m.y - Math.sin(m.angle) * m.len;
+          const grad = ctx.createLinearGradient(m.x, m.y, tailX, tailY);
+          grad.addColorStop(0, `rgba(255,255,255,${m.life})`);
+          grad.addColorStop(1, 'rgba(255,255,255,0)');
+          ctx.strokeStyle = grad;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(m.x, m.y);
+          ctx.lineTo(tailX, tailY);
+          ctx.stroke();
+        }
+        requestAnimationFrame(loop);
+      }
+      loop();
+    })();
+
+    // Parallax planets (mouse move + gentle scroll)
+    (function () {
+      const planets = [
+        { el: document.getElementById('planet1'), depth: 18 },
+        { el: document.getElementById('planet2'), depth: 30 },
+        { el: document.getElementById('planet3'), depth: 45 },
+        { el: document.getElementById('planet4'), depth: 24 },
+      ];
+      let mx = 0, my = 0, tx = 0, ty = 0;
+
+      window.addEventListener('mousemove', (e) => {
+        mx = (e.clientX / window.innerWidth - 0.5) * 2;
+        my = (e.clientY / window.innerHeight - 0.5) * 2;
+      });
+
+      function animate() {
+        tx += (mx - tx) * 0.04;
+        ty += (my - ty) * 0.04;
+        for (const p of planets) {
+          if (!p.el) continue;
+          p.el.style.transform = `translate(${tx * p.depth}px, ${ty * p.depth}px)`;
+        }
+        requestAnimationFrame(animate);
+      }
+      animate();
     })();
   </script>
 
