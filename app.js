@@ -504,15 +504,12 @@ function getRankTitle(rank) {
   return null;
 }
 
-// Name block: username, title badge, and verified tick all inline on the same line.
-// `overrides` lets the Overall leaderboard inject rank-based combat titles.
+// Name block: username and verified tick inline on the same line.
 function playerNameBlockHtml(player, overrides = {}) {
-  const title = overrides.title !== undefined ? overrides.title : player.title;
   const verified = overrides.verified !== undefined ? overrides.verified : player.verified;
   return `
     <div class="player-row-name-line">
       <span class="player-row-name">${player.username}</span>
-      ${title ? titleBadgeHtml(title) : ''}
       ${verifiedBadgeHtml(verified)}
     </div>
   `;
@@ -585,7 +582,9 @@ function renderRankedOverall(filtered, modeLabel) {
     const elo = eloMap.get(player.id);
     const overallTier = computeOverallTier(elo);
     const rankTitle = getRankTitle(rank);
-    const nameOverrides = rankTitle ? { title: rankTitle, verified: true } : {};
+    const effectiveTitle = rankTitle || player.title;
+    const effectiveVerified = rankTitle ? true : player.verified;
+    const nameOverrides = { verified: effectiveVerified };
     const iconGrid = tierIconGridHtml(player, {});
     return `
       <div class="overall-player-card ${rank <= 3 ? 'rank-' + rank : ''}" data-player-id="${player.id}" role="button" tabindex="0"
@@ -601,6 +600,7 @@ function renderRankedOverall(filtered, modeLabel) {
           </div>
           <div class="overall-card-row2">
             ${regionBadgeHtml(player.region)}
+            ${effectiveTitle ? titleBadgeHtml(effectiveTitle) : ''}
             <div class="player-row-status ${player.status}" title="${player.status}">
               ${getStatusIcon(player.status)}
             </div>
