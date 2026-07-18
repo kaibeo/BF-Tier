@@ -69,11 +69,11 @@ const GAMEMODE_LABELS = {
 // or the person is offline, so the UI never breaks.
 const GAMEMODE_ITEM_IMG = {
   overall: 'https://minecraft.wiki/images/Invicon_Nether_Star.png',
-  vanilla: 'https://minecraft.wiki/images/Invicon_Golden_Apple.png',
-  uhc:     'https://minecraft.wiki/images/Invicon_Golden_Apple.png',
+  vanilla: 'https://minecraft.wiki/images/Invicon_End_Crystal.png',
+  uhc:     'https://minecraft.wiki/images/Invicon_Water_Bucket.png',
   pot:     'https://minecraft.wiki/images/Invicon_Potion.png',
-  nethop:  'https://minecraft.wiki/images/Invicon_Ender_Pearl.png',
-  smp:     'https://minecraft.wiki/images/Invicon_Grass_Block.png',
+  nethop:  'https://minecraft.wiki/images/Invicon_Netherite_Chestplate.png',
+  smp:     'https://minecraft.wiki/images/Invicon_Shield.png',
   sword:   'https://minecraft.wiki/images/Invicon_Diamond_Sword.png',
   axe:     'https://minecraft.wiki/images/Invicon_Diamond_Axe.png',
   mace:    'https://minecraft.wiki/images/Invicon_Mace.png',
