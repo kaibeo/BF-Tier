@@ -748,6 +748,29 @@ body::after {
   animation: haloPulse 2.4s ease-in-out infinite;
 }
 
+/* RGB shimmer border chasing around the frame, layered under the
+   per-rank glow for a bit of extra sparkle */
+.avatar-energy-ring::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 12px;
+  padding: 2px;
+  background: conic-gradient(from 0deg,
+    #ff003c, #ff8a00, #ffee00, #4dff00, #00fff2, #0066ff, #cb00ff, #ff003c);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  opacity: 0.85;
+  animation: rgbSpin 3s linear infinite;
+}
+
+@keyframes rgbSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
 /* small energy-sword icon decorating the bottom-right corner */
 .energy-wisp.w1 {
   position: absolute;
