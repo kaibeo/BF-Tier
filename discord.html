@@ -18,18 +18,18 @@
       padding: 24px;
     }
     .discord-card {
-      max-width: 420px;
+      max-width: 460px;
       width: 100%;
       background: var(--bg-glass-heavy, rgba(7,6,13,0.92));
       border: 1px solid rgba(140,100,255,0.18);
       border-radius: 20px;
-      padding: 40px 32px;
+      padding: 36px 28px;
       text-align: center;
     }
     .discord-card .discord-icon-wrap {
-      width: 64px;
-      height: 64px;
-      margin: 0 auto 20px;
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 18px;
       border-radius: 50%;
       background: rgba(88,101,242,0.15);
       display: flex;
@@ -39,38 +39,68 @@
     }
     .discord-card h1 {
       font-family: 'Orbitron', sans-serif;
-      font-size: 20px;
-      margin: 0 0 10px;
+      font-size: 19px;
+      margin: 0 0 8px;
       color: #fff;
     }
     .discord-card p {
       color: rgba(255,255,255,0.6);
-      font-size: 14px;
+      font-size: 13.5px;
       line-height: 1.5;
-      margin: 0 0 28px;
+      margin: 0 0 26px;
     }
-    .discord-join-btn {
-      display: inline-flex;
+    .discord-server-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      text-align: left;
+    }
+    .discord-server-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(88,101,242,0.10);
+      border: 1px solid rgba(88,101,242,0.28);
+      border-radius: 12px;
+      text-decoration: none;
+      transition: background 0.18s ease, border-color 0.18s ease, transform 0.15s ease;
+    }
+    .discord-server-btn:hover {
+      background: rgba(88,101,242,0.22);
+      border-color: rgba(88,101,242,0.55);
+      transform: translateY(-1px);
+    }
+    .discord-server-icon {
+      width: 34px;
+      height: 34px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      width: 100%;
-      padding: 14px 20px;
-      background: #5865F2;
-      color: #fff;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 15px;
-      text-decoration: none;
-      transition: background 0.2s ease, transform 0.15s ease;
+      background: rgba(255,255,255,0.06);
+      overflow: hidden;
     }
-    .discord-join-btn:hover {
-      background: #4752C4;
-      transform: translateY(-1px);
+    .discord-server-icon img {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+    }
+    .discord-server-name {
+      flex: 1;
+      color: #fff;
+      font-weight: 600;
+      font-size: 14.5px;
+    }
+    .discord-server-arrow {
+      color: #5865F2;
+      flex-shrink: 0;
     }
     .discord-back {
       display: inline-block;
-      margin-top: 20px;
+      margin-top: 24px;
       color: rgba(255,255,255,0.4);
       font-size: 13px;
       text-decoration: none;
@@ -84,20 +114,63 @@
     <symbol id="icon-discord" viewBox="0 0 24 24" fill="currentColor">
       <path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
     </symbol>
+    <symbol id="icon-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 6l6 6-6 6"/>
+    </symbol>
   </svg>
 
   <div class="discord-page">
     <div class="discord-card">
       <div class="discord-icon-wrap">
-        <svg width="32" height="32"><use href="#icon-discord"/></svg>
+        <svg width="30" height="30"><use href="#icon-discord"/></svg>
       </div>
-      <h1>Join the RC Tier Discord</h1>
-      <p>Connect with the community, track ranking updates, and chat with other players. Click below to head to our Discord server.</p>
-      <!-- Replace the href below with your actual Discord invite link -->
-      <a href="https://discord.gg/YOUR-INVITE-CODE" target="_blank" rel="noopener noreferrer" class="discord-join-btn">
-        <svg width="18" height="18"><use href="#icon-discord"/></svg>
-        <span>Open Discord</span>
-      </a>
+      <h1>Join an RC Tier Discord</h1>
+      <p>Each gamemode has its own server. Pick the one you want to join below.</p>
+
+      <!-- One row per gamemode. Replace each href with that server's real invite link. -->
+      <div class="discord-server-list">
+        <a href="https://discord.gg/CRYSTAL-INVITE" target="_blank" rel="noopener noreferrer" class="discord-server-btn">
+          <span class="discord-server-icon"><img src="https://minecraft.wiki/images/Invicon_End_Crystal.gif" alt="" /></span>
+          <span class="discord-server-name">Crystal PvP</span>
+          <svg class="discord-server-arrow" width="18" height="18"><use href="#icon-arrow-right"/></svg>
+        </a>
+        <a href="https://discord.gg/UHC-INVITE" target="_blank" rel="noopener noreferrer" class="discord-server-btn">
+          <span class="discord-server-icon"><img src="https://minecraft.wiki/images/Invicon_Water_Bucket.png" alt="" /></span>
+          <span class="discord-server-name">UHC PvP</span>
+          <svg class="discord-server-arrow" width="18" height="18"><use href="#icon-arrow-right"/></svg>
+        </a>
+        <a href="https://discord.gg/POT-INVITE" target="_blank" rel="noopener noreferrer" class="discord-server-btn">
+          <span class="discord-server-icon"><img src="https://minecraft.wiki/images/Invicon_Potion_of_Healing.png" alt="" /></span>
+          <span class="discord-server-name">Pot PvP</span>
+          <svg class="discord-server-arrow" width="18" height="18"><use href="#icon-arrow-right"/></svg>
+        </a>
+        <a href="https://discord.gg/NETH-INVITE" target="_blank" rel="noopener noreferrer" class="discord-server-btn">
+          <span class="discord-server-icon"><img src="https://minecraft.wiki/images/Invicon_Netherite_Chestplate.png" alt="" /></span>
+          <span class="discord-server-name">Neth PvP</span>
+          <svg class="discord-server-arrow" width="18" height="18"><use href="#icon-arrow-right"/></svg>
+        </a>
+        <a href="https://discord.gg/SMP-INVITE" target="_blank" rel="noopener noreferrer" class="discord-server-btn">
+          <span class="discord-server-icon"><img src="https://minecraft.wiki/images/Invicon_Shield.png" alt="" /></span>
+          <span class="discord-server-name">Smp PvP</span>
+          <svg class="discord-server-arrow" width="18" height="18"><use href="#icon-arrow-right"/></svg>
+        </a>
+        <a href="https://discord.gg/SWORD-INVITE" target="_blank" rel="noopener noreferrer" class="discord-server-btn">
+          <span class="discord-server-icon"><img src="https://minecraft.wiki/images/Invicon_Diamond_Sword.png" alt="" /></span>
+          <span class="discord-server-name">Sword PvP</span>
+          <svg class="discord-server-arrow" width="18" height="18"><use href="#icon-arrow-right"/></svg>
+        </a>
+        <a href="https://discord.gg/AXE-INVITE" target="_blank" rel="noopener noreferrer" class="discord-server-btn">
+          <span class="discord-server-icon"><img src="https://minecraft.wiki/images/Invicon_Diamond_Axe.png" alt="" /></span>
+          <span class="discord-server-name">Axe PvP</span>
+          <svg class="discord-server-arrow" width="18" height="18"><use href="#icon-arrow-right"/></svg>
+        </a>
+        <a href="https://discord.gg/MACE-INVITE" target="_blank" rel="noopener noreferrer" class="discord-server-btn">
+          <span class="discord-server-icon"><img src="https://minecraft.wiki/images/Invicon_Mace.png" alt="" /></span>
+          <span class="discord-server-name">Mace PvP</span>
+          <svg class="discord-server-arrow" width="18" height="18"><use href="#icon-arrow-right"/></svg>
+        </a>
+      </div>
+
       <a href="index.html" class="discord-back">← Back to RC Tier</a>
     </div>
   </div>

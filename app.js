@@ -15,16 +15,16 @@ const SKIN_URL_LG = (username) =>
 const TIER_ORDER = ['ht1', 'lt1', 'ht2', 'lt2', 'ht3', 'lt3', 'ht4', 'lt4', 'ht5', 'lt5'];
 
 const TIER_META = {
-  ht1: { label: 'High Tier 1', short: 'HT1', color: '#ff2244' },
-  lt1: { label: 'Low Tier 1',  short: 'LT1', color: '#ff6677' },
-  ht2: { label: 'High Tier 2', short: 'HT2', color: '#A855F7' },
-  lt2: { label: 'Low Tier 2',  short: 'LT2', color: '#C185F9' },
-  ht3: { label: 'High Tier 3', short: 'HT3', color: '#22D3EE' },
-  lt3: { label: 'Low Tier 3',  short: 'LT3', color: '#67E4F5' },
-  ht4: { label: 'High Tier 4', short: 'HT4', color: '#34D399' },
-  lt4: { label: 'Low Tier 4',  short: 'LT4', color: '#7EE8BE' },
-  ht5: { label: 'High Tier 5', short: 'HT5', color: '#60A5FA' },
-  lt5: { label: 'Low Tier 5',  short: 'LT5', color: '#94C2FB' },
+  ht1: { label: 'High Tier 1', short: 'HT1', color: '#ff2244', points: 60 },
+  lt1: { label: 'Low Tier 1',  short: 'LT1', color: '#ff6677', points: 40 },
+  ht2: { label: 'High Tier 2', short: 'HT2', color: '#A855F7', points: 30 },
+  lt2: { label: 'Low Tier 2',  short: 'LT2', color: '#C185F9', points: 20 },
+  ht3: { label: 'High Tier 3', short: 'HT3', color: '#22D3EE', points: 10 },
+  lt3: { label: 'Low Tier 3',  short: 'LT3', color: '#67E4F5', points: 6 },
+  ht4: { label: 'High Tier 4', short: 'HT4', color: '#34D399', points: 4 },
+  lt4: { label: 'Low Tier 4',  short: 'LT4', color: '#7EE8BE', points: 3 },
+  ht5: { label: 'High Tier 5', short: 'HT5', color: '#60A5FA', points: 2 },
+  lt5: { label: 'Low Tier 5',  short: 'LT5', color: '#94C2FB', points: 1 },
 };
 
 const TITLE_META = {
@@ -544,6 +544,31 @@ function tierIconGridHtml(player, opts = {}) {
   }).join('');
 }
 
+// Vertical list version of the same data — one row per gamemode showing the
+// item icon, mode name, tier badge, and its point value, sorted highest tier
+// (most points) first. Used in the profile modal.
+function tierListRowsHtml(player, opts = {}) {
+  const highlightMode = opts.highlightMode;
+  const modes = GAMEMODES.filter((m) => m !== 'overall' && player.tiers[m]);
+  if (modes.length === 0) return '';
+  const rows = modes.map((m) => {
+    const tierId = player.tiers[m];
+    const meta = TIER_META[tierId];
+    if (!meta) return null;
+    return { m, tierId, meta };
+  }).filter(Boolean);
+  rows.sort((a, b) => (b.meta.points || 0) - (a.meta.points || 0));
+  return rows.map(({ m, meta }) => `
+    <div class="tier-list-row ${m === highlightMode ? 'is-current' : ''}" style="--cell-color:${meta.color}">
+      <div class="tier-list-row-icon">${gamemodeItemImgHtml(m, 22)}</div>
+      <div class="tier-list-row-info">
+        <span class="tier-list-row-mode">${GAMEMODE_LABELS[m]}</span>
+        <span class="tier-list-row-tier">${meta.short}</span>
+      </div>
+      <span class="tier-list-row-points">${meta.points ?? '—'} <small>pts</small></span>
+    </div>`).join('');
+}
+
 // ─── RENDERING ───
 
 // Overall tab: expanded per-player cards (mcpvp.club-style) ranked by
@@ -810,9 +835,9 @@ function openModal(player, mode) {
   // player holds (Overall excluded from the grid since it's a derived stat,
   // not a per-mode tier), with the mode the modal was opened from highlighted.
   const gamemodesSection = document.getElementById('modalGamemodesSection');
-  const iconGrid = tierIconGridHtml(player, { highlightMode: isOverall ? null : mode });
-  if (iconGrid) {
-    document.getElementById('modalGamemodes').innerHTML = iconGrid;
+  const tierList = tierListRowsHtml(player, { highlightMode: isOverall ? null : mode });
+  if (tierList) {
+    document.getElementById('modalGamemodes').innerHTML = tierList;
     gamemodesSection.style.display = '';
   } else {
     gamemodesSection.style.display = 'none';
