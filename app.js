@@ -525,16 +525,22 @@ function tierIconGridHtml(player, opts = {}) {
 
 // Overall tab: expanded per-player cards (mcpvp.club-style) ranked by
 // computed Overall Elo (average Elo across every gamemode the player holds).
+// Capped at the top 100 — players ranking below that don't get an Overall slot.
+const OVERALL_RANK_CAP = 100;
+
 function renderRankedOverall(filtered, modeLabel) {
   // Global rank is computed from the unfiltered pool so a player's rank/title
   // stays fixed even when the person is searching or filtering by region.
   const globalRanking = [...getPlayersForMode('overall')]
     .map((p) => ({ p, elo: computeOverallElo(p) }))
-    .sort((a, b) => b.elo - a.elo);
+    .sort((a, b) => b.elo - a.elo)
+    .slice(0, OVERALL_RANK_CAP);
   const rankMap = new Map(globalRanking.map((entry, idx) => [entry.p.id, idx + 1]));
   const eloMap = new Map(globalRanking.map((entry) => [entry.p.id, entry.elo]));
 
-  const ranked = [...filtered].sort((a, b) => eloMap.get(b.id) - eloMap.get(a.id));
+  const ranked = [...filtered]
+    .filter((p) => rankMap.has(p.id))
+    .sort((a, b) => eloMap.get(b.id) - eloMap.get(a.id));
 
   if (ranked.length === 0) {
     tierlistContainer.innerHTML = `
@@ -752,6 +758,9 @@ function openModal(player, mode) {
   }
 
   document.getElementById('modalAvatar').src = SKIN_URL_LG(player.username);
+  const headerEl = document.getElementById('modalHeader');
+  if (headerEl) headerEl.style.setProperty('--banner-color', meta.color);
+
   document.getElementById('modalName').innerHTML = `
     <span>${player.username}</span>
     ${effectiveTitle ? titleBadgeHtml(effectiveTitle) : ''}
@@ -762,7 +771,7 @@ function openModal(player, mode) {
   if (modalTitleEl) modalTitleEl.innerHTML = '';
 
   const tierEl = document.getElementById('modalTier');
-  tierEl.innerHTML = tierTagHtml(tier) + `<span style="margin-left: 8px; color: var(--text-secondary)">${meta.label}</span>`;
+  tierEl.innerHTML = tierTagHtml(tier) + `<span class="modal-tier-label">${meta.label}</span>`;
 
   document.getElementById('modalRegion').innerHTML = regionBadgeHtml(player.region);
 

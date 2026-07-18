@@ -773,16 +773,16 @@ body::after {
   align-items: center;
   justify-content: center;
   font-family: 'Orbitron', sans-serif;
-  font-size: 0.5rem;
+  font-size: 0.62rem;
   font-weight: 800;
-  letter-spacing: 0.2px;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
+  letter-spacing: 0.4px;
+  padding: 0.22rem 0.55rem;
+  border-radius: 6px;
   border: 1.5px solid currentColor;
-  line-height: 1;
+  line-height: 1.2;
   text-align: center;
   flex-shrink: 0;
+  white-space: nowrap;
 }
 
 /* Empty state for tier column */
@@ -994,24 +994,8 @@ body::after {
 }
 
 .overall-card-row2 .tier-tag {
-  width: 26px;
-  height: 26px;
-  font-size: 0.44rem;
-}
-
-.overall-player-card.rank-1 .overall-player-card-head::before,
-.overall-player-card.rank-2 .overall-player-card-head::before,
-.overall-player-card.rank-3 .overall-player-card-head::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -40%;
-  width: 25%;
-  height: 100%;
-  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.12), transparent);
-  animation: rowShine 4s ease-in-out infinite;
-  pointer-events: none;
-  z-index: 1;
+  font-size: 0.56rem;
+  padding: 0.16rem 0.4rem;
 }
 
 .overall-player-card-tiers {
@@ -1031,28 +1015,53 @@ body::after {
   margin-bottom: 0.5rem;
 }
 
-/* Same glowing top-3 treatment as the old rank rows, reused on the cards */
-.overall-player-card.rank-1, .overall-player-card.rank-2, .overall-player-card.rank-3 {
+/* Top-3 treatment — solid colored border + steady outer glow + accent bar.
+   Kept deliberately simple (no clipped box-shadow, no fragile selectors)
+   so it's guaranteed visible on every card. */
+.overall-player-card.rank-1,
+.overall-player-card.rank-2,
+.overall-player-card.rank-3 {
   position: relative;
+  border-width: 1.5px;
 }
 
 .overall-player-card.rank-1 {
-  background: linear-gradient(90deg, rgba(255, 215, 0, 0.1), rgba(255, 60, 172, 0.04) 60%, transparent);
-  border-color: rgba(255, 215, 0, 0.35);
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.12), rgba(255, 60, 172, 0.05) 55%, transparent);
+  border-color: #FFD700;
+  box-shadow: 0 0 22px -4px rgba(255, 215, 0, 0.45);
   animation: rowGlowGold 2.6s ease-in-out infinite;
 }
 
 .overall-player-card.rank-2 {
-  background: linear-gradient(90deg, rgba(226, 232, 240, 0.08), transparent 65%);
-  border-color: rgba(226, 232, 240, 0.25);
+  background: linear-gradient(135deg, rgba(226, 232, 240, 0.1), transparent 60%);
+  border-color: #E2E8F0;
+  box-shadow: 0 0 18px -4px rgba(226, 232, 240, 0.4);
   animation: rowGlowSilver 2.6s ease-in-out infinite;
 }
 
 .overall-player-card.rank-3 {
-  background: linear-gradient(90deg, rgba(205, 127, 50, 0.09), transparent 65%);
-  border-color: rgba(205, 127, 50, 0.25);
+  background: linear-gradient(135deg, rgba(205, 127, 50, 0.11), transparent 60%);
+  border-color: #CD7F32;
+  box-shadow: 0 0 18px -4px rgba(205, 127, 50, 0.4);
   animation: rowGlowBronze 2.6s ease-in-out infinite;
 }
+
+/* Thin colored accent bar along the top edge, echoing the medal color */
+.overall-player-card.rank-1::after,
+.overall-player-card.rank-2::after,
+.overall-player-card.rank-3::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 12px;
+  right: 12px;
+  height: 2px;
+  border-radius: 0 0 3px 3px;
+}
+
+.overall-player-card.rank-1::after { background: linear-gradient(90deg, transparent, #FFD700, transparent); }
+.overall-player-card.rank-2::after { background: linear-gradient(90deg, transparent, #E2E8F0, transparent); }
+.overall-player-card.rank-3::after { background: linear-gradient(90deg, transparent, #CD7F32, transparent); }
 
 /* Shared circular tier-icon grid — used by the Overall cards AND the profile modal */
 .tier-icon-grid {
@@ -1304,19 +1313,32 @@ body::after {
   align-items: center;
   gap: 1.25rem;
   border-bottom: 1px solid var(--border-subtle);
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-header-banner {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 120% 100% at 20% 0%, var(--banner-color, transparent) 0%, transparent 65%);
+  opacity: 0.35;
+  pointer-events: none;
 }
 
 .modal-avatar {
-  width: 72px;
-  height: 72px;
+  width: 76px;
+  height: 76px;
   border-radius: var(--radius-md);
   image-rendering: pixelated;
-  border: 2px solid rgba(168, 85, 247, 0.2);
+  border: 2px solid var(--banner-color, rgba(168, 85, 247, 0.4));
+  box-shadow: 0 0 22px -4px var(--banner-color, rgba(168, 85, 247, 0.5));
   background: var(--bg-tertiary);
   object-fit: cover;
+  position: relative;
+  z-index: 1;
 }
 
-.modal-player-info { flex: 1; }
+.modal-player-info { flex: 1; position: relative; z-index: 1; min-width: 0; }
 
 .modal-player-name {
   font-family: 'Orbitron', sans-serif;
@@ -1344,9 +1366,16 @@ body::after {
 }
 
 .modal-player-tier {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.modal-tier-label {
   font-size: 0.8rem;
   font-weight: 600;
-  margin-bottom: 6px;
+  color: var(--text-secondary);
 }
 
 .modal-player-region {
