@@ -469,9 +469,17 @@ function getStatusIcon(status) {
   return '<svg width="11" height="11"><use href="#icon-dash"/></svg>';
 }
 
-function skinHtml(username) {
+function skinHtml(username, rank) {
   const url = SKIN_URL(username);
-  return `<div class="player-skin-wrap"><img class="player-skin" src="${url}" alt="" loading="lazy" onerror="this.parentElement.classList.add('no-skin');this.style.display='none'"></div>`;
+  const rankClass = rank && rank <= 3 ? ` avatar-frame-rank-${rank}` : '';
+  const swirl = rank && rank <= 3 ? `
+    <div class="avatar-energy-ring">
+      <span class="energy-wisp w1"></span>
+      <span class="energy-wisp w2"></span>
+      <span class="energy-wisp w3"></span>
+      <span class="energy-wisp w4"></span>
+    </div>` : '';
+  return `<div class="player-skin-wrap${rankClass}">${swirl}<img class="player-skin" src="${url}" alt="" loading="lazy" onerror="this.parentElement.classList.add('no-skin');this.style.display='none'"></div>`;
 }
 
 function tierTagHtml(tierId) {
@@ -635,7 +643,7 @@ function renderRankedOverall(filtered, modeLabel) {
         <div class="overall-player-card-head">
           <div class="overall-card-row1">
             ${rankBadgeHtml(rank)}
-            ${skinHtml(player.username)}
+            ${skinHtml(player.username, rank)}
             <div class="rank-row-info">
               ${playerNameBlockHtml(player, nameOverrides)}
             </div>
