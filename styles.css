@@ -297,9 +297,14 @@ body::after {
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-subtle);
   backdrop-filter: blur(12px);
-  width: fit-content;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
   margin-bottom: 1.25rem;
 }
+
+.gamemode-tabs::-webkit-scrollbar { display: none; }
 
 .gamemode-tab {
   position: relative;
