@@ -125,6 +125,10 @@
       <line x1="18" y1="6" x2="6" y2="18"/>
       <line x1="6" y1="6" x2="18" y2="18"/>
     </symbol>
+    <!-- Chevron Down -->
+    <symbol id="icon-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 9l6 6 6-6"/>
+    </symbol>
     <!-- Globe -->
     <symbol id="icon-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="10"/>
@@ -255,15 +259,19 @@
         <input type="text" class="search-input" id="searchInput" placeholder="Search players..." autocomplete="off" />
         <svg class="search-icon-svg" width="18" height="18"><use href="#icon-search"/></svg>
       </div>
-      <div class="region-select-wrapper">
-        <select class="region-select" id="regionFilter">
-          <option value="all">All Regions</option>
-          <option value="NA">NA — North America</option>
-          <option value="EU">EU — Europe</option>
-          <option value="AS">AS — Asia</option>
-          <option value="AU">AU — Oceania</option>
-          <option value="SA">SA — South America</option>
-        </select>
+      <div class="region-select-wrapper" id="regionSelectWrapper">
+        <button type="button" class="region-select-btn" id="regionSelectBtn">
+          <span id="regionSelectLabel">All Regions</span>
+          <svg class="region-select-caret" width="14" height="14"><use href="#icon-chevron-down"/></svg>
+        </button>
+        <div class="region-select-menu" id="regionSelectMenu">
+          <button type="button" class="region-select-option active" data-value="all">All Regions</button>
+          <button type="button" class="region-select-option" data-value="NA">NA — North America</button>
+          <button type="button" class="region-select-option" data-value="EU">EU — Europe</button>
+          <button type="button" class="region-select-option" data-value="AS">AS — Asia</button>
+          <button type="button" class="region-select-option" data-value="AU">AU — Oceania</button>
+          <button type="button" class="region-select-option" data-value="SA">SA — South America</button>
+        </div>
       </div>
       <button class="sort-btn" id="sortBtn" title="Toggle sort order">
         <svg width="16" height="16"><use href="#icon-sort"/></svg>

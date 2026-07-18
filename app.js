@@ -309,7 +309,10 @@ let sortByElo = true;
 // ─── DOM REFS ───
 const tierlistContainer = document.getElementById('tierlistContainer');
 const searchInput = document.getElementById('searchInput');
-const regionSelect = document.getElementById('regionFilter');
+const regionSelectWrapper = document.getElementById('regionSelectWrapper');
+const regionSelectBtn = document.getElementById('regionSelectBtn');
+const regionSelectMenu = document.getElementById('regionSelectMenu');
+const regionSelectLabel = document.getElementById('regionSelectLabel');
 const sortBtn = document.getElementById('sortBtn');
 const sortLabel = document.getElementById('sortLabel');
 const gamemodeTabs = document.getElementById('gamemodeTabs');
@@ -921,10 +924,27 @@ searchInput.addEventListener('input', (e) => {
   }, 120);
 });
 
-// Region filter
-regionSelect.addEventListener('change', (e) => {
-  regionFilter = e.target.value;
-  renderTierlist();
+// Region filter (custom dropdown)
+regionSelectBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  regionSelectWrapper.classList.toggle('open');
+});
+
+regionSelectMenu.querySelectorAll('.region-select-option').forEach((opt) => {
+  opt.addEventListener('click', () => {
+    regionFilter = opt.dataset.value;
+    regionSelectLabel.textContent = opt.textContent;
+    regionSelectMenu.querySelectorAll('.region-select-option').forEach((o) => o.classList.remove('active'));
+    opt.classList.add('active');
+    regionSelectWrapper.classList.remove('open');
+    renderTierlist();
+  });
+});
+
+document.addEventListener('click', (e) => {
+  if (!regionSelectWrapper.contains(e.target)) {
+    regionSelectWrapper.classList.remove('open');
+  }
 });
 
 // Sort toggle

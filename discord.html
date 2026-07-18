@@ -10,45 +10,116 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <style>
+    body { overflow-x: hidden; }
+
     .discord-page {
+      position: relative;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 24px;
+      z-index: 1;
     }
+
+    .nebula-blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.55;
+    }
+    .nebula-blob.b1 {
+      width: 480px; height: 480px;
+      top: -160px; left: -140px;
+      background: radial-gradient(circle, rgba(168,85,247,0.55), transparent 70%);
+      animation: driftA 16s ease-in-out infinite alternate;
+    }
+    .nebula-blob.b2 {
+      width: 420px; height: 420px;
+      bottom: -160px; right: -120px;
+      background: radial-gradient(circle, rgba(88,101,242,0.5), transparent 70%);
+      animation: driftB 18s ease-in-out infinite alternate;
+    }
+    .nebula-blob.b3 {
+      width: 300px; height: 300px;
+      top: 40%; right: 10%;
+      background: radial-gradient(circle, rgba(236,72,153,0.35), transparent 70%);
+      animation: driftC 20s ease-in-out infinite alternate;
+    }
+    @keyframes driftA { from { transform: translate(0,0) scale(1); } to { transform: translate(40px,30px) scale(1.08); } }
+    @keyframes driftB { from { transform: translate(0,0) scale(1); } to { transform: translate(-30px,-40px) scale(1.1); } }
+    @keyframes driftC { from { transform: translate(0,0) scale(1); } to { transform: translate(-25px,25px) scale(0.95); } }
+
     .discord-card {
+      position: relative;
       max-width: 460px;
       width: 100%;
-      background: var(--bg-glass-heavy, rgba(7,6,13,0.92));
-      border: 1px solid rgba(140,100,255,0.18);
-      border-radius: 20px;
-      padding: 36px 28px;
+      background: rgba(9, 7, 18, 0.72);
+      border: 1px solid rgba(168, 85, 247, 0.22);
+      border-radius: 22px;
+      padding: 40px 30px 32px;
       text-align: center;
+      backdrop-filter: blur(22px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(168,85,247,0.06), 0 0 60px rgba(88,101,242,0.08);
+      animation: cardIn 0.55s cubic-bezier(0.16, 1, 0.3, 1);
     }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(18px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .discord-card::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 22px;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(168,85,247,0.5), rgba(88,101,242,0.15), rgba(236,72,153,0.35));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
     .discord-card .discord-icon-wrap {
-      width: 60px;
-      height: 60px;
-      margin: 0 auto 18px;
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 20px;
       border-radius: 50%;
-      background: rgba(88,101,242,0.15);
+      background: radial-gradient(circle, rgba(88,101,242,0.28), rgba(88,101,242,0.08));
+      border: 1px solid rgba(88,101,242,0.35);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #5865F2;
+      color: #8b93ff;
+      box-shadow: 0 0 30px rgba(88,101,242,0.35);
+      animation: iconPulse 2.6s ease-in-out infinite;
     }
+    @keyframes iconPulse {
+      0%, 100% { box-shadow: 0 0 24px rgba(88,101,242,0.3); }
+      50% { box-shadow: 0 0 42px rgba(88,101,242,0.55); }
+    }
+
     .discord-card h1 {
       font-family: 'Orbitron', sans-serif;
-      font-size: 19px;
+      font-size: 20px;
       margin: 0 0 8px;
-      color: #fff;
+      background: linear-gradient(135deg, #fff, #c9b8ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: 0.3px;
     }
     .discord-card p {
-      color: rgba(255,255,255,0.6);
+      color: rgba(255,255,255,0.55);
       font-size: 13.5px;
       line-height: 1.5;
-      margin: 0 0 26px;
+      margin: 0 0 28px;
     }
+
     .discord-server-list {
       display: flex;
       flex-direction: column;
@@ -60,21 +131,34 @@
       align-items: center;
       gap: 12px;
       width: 100%;
-      padding: 12px 16px;
-      background: rgba(88,101,242,0.10);
-      border: 1px solid rgba(88,101,242,0.28);
-      border-radius: 12px;
+      padding: 13px 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 13px;
       text-decoration: none;
-      transition: background 0.18s ease, border-color 0.18s ease, transform 0.15s ease;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.18s ease, box-shadow 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .discord-server-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(168,85,247,0.14), rgba(88,101,242,0.1));
+      opacity: 0;
+      transition: opacity 0.2s ease;
     }
     .discord-server-btn:hover {
-      background: rgba(88,101,242,0.22);
-      border-color: rgba(88,101,242,0.55);
-      transform: translateY(-1px);
+      border-color: rgba(168,85,247,0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(88,101,242,0.18);
     }
+    .discord-server-btn:hover::before { opacity: 1; }
+    .discord-server-btn > * { position: relative; z-index: 1; }
+
     .discord-server-icon {
-      width: 34px;
-      height: 34px;
+      width: 36px;
+      height: 36px;
       flex-shrink: 0;
       border-radius: 50%;
       display: flex;
@@ -82,33 +166,39 @@
       justify-content: center;
       background: rgba(255,255,255,0.06);
       overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.06);
     }
-    .discord-server-icon img {
-      width: 20px;
-      height: 20px;
-      object-fit: contain;
-    }
-    .discord-server-name {
-      flex: 1;
-      color: #fff;
-      font-weight: 600;
-      font-size: 14.5px;
-    }
+    .discord-server-icon img { width: 20px; height: 20px; object-fit: contain; }
+
+    .discord-server-name { flex: 1; color: #fff; font-weight: 600; font-size: 14.5px; }
+
     .discord-server-arrow {
-      color: #5865F2;
+      color: #a78bfa;
       flex-shrink: 0;
+      transition: transform 0.2s ease;
     }
+    .discord-server-btn:hover .discord-server-arrow { transform: translateX(3px); }
+
     .discord-back {
-      display: inline-block;
-      margin-top: 24px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 26px;
       color: rgba(255,255,255,0.4);
       font-size: 13px;
       text-decoration: none;
+      transition: color 0.18s ease;
     }
-    .discord-back:hover { color: rgba(255,255,255,0.7); }
+    .discord-back:hover { color: rgba(255,255,255,0.75); }
   </style>
 </head>
 <body>
+
+  <canvas id="starfield"></canvas>
+
+  <div class="nebula-blob b1"></div>
+  <div class="nebula-blob b2"></div>
+  <div class="nebula-blob b3"></div>
 
   <svg xmlns="http://www.w3.org/2000/svg" style="display:none;">
     <symbol id="icon-discord" viewBox="0 0 24 24" fill="currentColor">
@@ -117,17 +207,19 @@
     <symbol id="icon-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
       <path d="M9 6l6 6-6 6"/>
     </symbol>
+    <symbol id="icon-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 6l-6 6 6 6"/>
+    </symbol>
   </svg>
 
   <div class="discord-page">
     <div class="discord-card">
       <div class="discord-icon-wrap">
-        <svg width="30" height="30"><use href="#icon-discord"/></svg>
+        <svg width="32" height="32"><use href="#icon-discord"/></svg>
       </div>
       <h1>Join an RC Tier Discord</h1>
       <p>Each gamemode has its own server. Pick the one you want to join below.</p>
 
-      <!-- One row per gamemode. Replace each href with that server's real invite link. -->
       <div class="discord-server-list">
         <a href="https://discord.gg/vtaMhKxf8b" target="_blank" rel="noopener noreferrer" class="discord-server-btn">
           <span class="discord-server-icon"><img src="https://minecraft.wiki/images/Invicon_End_Crystal.gif" alt="" /></span>
@@ -171,9 +263,64 @@
         </a>
       </div>
 
-      <a href="index.html" class="discord-back">← Back to RC Tier</a>
+      <a href="index.html" class="discord-back">
+        <svg width="14" height="14"><use href="#icon-arrow-left"/></svg>
+        Back to RC Tier
+      </a>
     </div>
   </div>
+
+  <script>
+    (function () {
+      const canvas = document.getElementById('starfield');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let stars = [];
+      const STAR_COUNT = window.innerWidth < 768 ? 70 : 120;
+      let resizeTimeout;
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+
+      function initStars() {
+        stars = Array.from({ length: STAR_COUNT }, () => ({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 1.4 + 0.3,
+          alpha: Math.random() * 0.6 + 0.2,
+          twinkleSpeed: Math.random() * 0.015 + 0.004,
+          twinkleDir: Math.random() > 0.5 ? 1 : -1,
+        }));
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (const s of stars) {
+          s.alpha += s.twinkleSpeed * s.twinkleDir;
+          if (s.alpha <= 0.15 || s.alpha >= 0.9) s.twinkleDir *= -1;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255,255,255,${s.alpha})`;
+          ctx.fill();
+        }
+        requestAnimationFrame(draw);
+      }
+
+      resize();
+      initStars();
+      draw();
+
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          resize();
+          initStars();
+        }, 200);
+      });
+    })();
+  </script>
 
 </body>
 </html>
