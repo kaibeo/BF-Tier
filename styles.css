@@ -342,6 +342,12 @@ body::after {
   flex-shrink: 0;
 }
 
+.gamemode-tab[data-mode="overall"] .gamemode-item-img,
+.modal-gamemode-item[data-mode="overall"] .gamemode-item-img {
+  image-rendering: auto;
+  border-radius: 4px;
+}
+
 .tab-count {
   font-size: 0.68rem;
   background: rgba(255, 255, 255, 0.08);

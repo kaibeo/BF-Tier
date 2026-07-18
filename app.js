@@ -68,7 +68,7 @@ const GAMEMODE_LABELS = {
 // Falls back to the hand-drawn SVG icon (onerror below) if the image 404s
 // or the person is offline, so the UI never breaks.
 const GAMEMODE_ITEM_IMG = {
-  overall: 'https://minecraft.wiki/images/Invicon_Diamond_Sword.png',
+  overall: 'overall-sword.jpg',
   vanilla: 'https://minecraft.wiki/images/Invicon_End_Crystal.gif',
   uhc:     'https://minecraft.wiki/images/Invicon_Water_Bucket.png',
   pot:     'https://minecraft.wiki/images/Invicon_Potion_of_Healing.png',
@@ -601,7 +601,6 @@ function renderRankedOverall(filtered, modeLabel) {
           </div>
           <div class="overall-card-row2">
             ${regionBadgeHtml(player.region)}
-            ${tierTagHtml(overallTier)}
             <div class="player-row-status ${player.status}" title="${player.status}">
               ${getStatusIcon(player.status)}
             </div>
@@ -797,7 +796,13 @@ function openModal(player, mode) {
   if (modalTitleEl) modalTitleEl.innerHTML = '';
 
   const tierEl = document.getElementById('modalTier');
-  tierEl.innerHTML = tierTagHtml(tier) + `<span class="modal-tier-label">${meta.label}</span>`;
+  if (isOverall) {
+    tierEl.innerHTML = '';
+    tierEl.style.display = 'none';
+  } else {
+    tierEl.style.display = '';
+    tierEl.innerHTML = tierTagHtml(tier) + `<span class="modal-tier-label">${meta.label}</span>`;
+  }
 
   document.getElementById('modalRegion').innerHTML = regionBadgeHtml(player.region);
 
