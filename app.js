@@ -523,11 +523,11 @@ function rankBadgeHtml(rank) {
     return `
       <div class="rank-badge rank-gold rank-badge-medal">
         <svg class="rank-badge-crown" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 8l4 3 5-6 5 6 4-3-2 11H5L3 8zm2.5 12h13v2h-13v-2z"/></svg>
-        <span class="rank-badge-num">1</span>
+        <div class="rank-badge-inner"><span class="rank-badge-num">1</span></div>
       </div>`;
   }
-  if (rank === 2) return `<div class="rank-badge rank-silver rank-badge-medal"><span class="rank-badge-num">2</span></div>`;
-  if (rank === 3) return `<div class="rank-badge rank-bronze rank-badge-medal"><span class="rank-badge-num">3</span></div>`;
+  if (rank === 2) return `<div class="rank-badge rank-silver rank-badge-medal"><div class="rank-badge-inner"><span class="rank-badge-num">2</span></div></div>`;
+  if (rank === 3) return `<div class="rank-badge rank-bronze rank-badge-medal"><div class="rank-badge-inner"><span class="rank-badge-num">3</span></div></div>`;
   return `<div class="rank-badge">${rank}</div>`;
 }
 

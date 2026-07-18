@@ -923,35 +923,94 @@ body::after {
   border: 1px solid var(--border-subtle);
 }
 
-/* Top-3 medals: larger, shield-shaped badge with metallic shine + floating crown for #1 */
+/* Top-3 medals: MOBA-style square rank frame — rounded square badge,
+   double metallic border, a slowly rotating light ring behind it, and
+   crossed-sword accents for #1. */
 .rank-badge-medal {
   position: relative;
-  width: 40px;
-  height: 44px;
-  border-radius: 0;
-  clip-path: polygon(50% 0%, 100% 20%, 100% 75%, 50% 100%, 0% 75%, 0% 20%);
-  font-size: 1rem;
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  font-size: 1.05rem;
   border: none;
   overflow: visible;
+  background: #0c0a14;
+  box-shadow: inset 0 0 0 2px rgba(0,0,0,0.5);
 }
 
+/* Rotating halo ring behind the frame */
 .rank-badge-medal::before {
   content: '';
   position: absolute;
-  inset: 2px;
-  clip-path: polygon(50% 0%, 100% 20%, 100% 75%, 50% 100%, 0% 75%, 0% 20%);
-  background: linear-gradient(155deg, rgba(255,255,255,0.35), transparent 55%);
-  mix-blend-mode: overlay;
+  inset: -9px;
+  border-radius: 50%;
+  border: 2px dashed var(--medal-ring, rgba(255,215,0,0.55));
+  animation: ringSpin 6s linear infinite;
+  opacity: 0.85;
+}
+
+/* Soft glow disc behind the ring */
+.rank-badge-medal::after {
+  content: '';
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--medal-glow, rgba(255,215,0,0.35)), transparent 70%);
+  z-index: -1;
+  animation: haloPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes ringSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes haloPulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%      { opacity: 0.9; transform: scale(1.08); }
+}
+
+/* Inner square frame with beveled metallic border, sitting above the ring */
+.rank-badge-medal .rank-badge-inner {
+  position: absolute;
+  inset: 0;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(155deg, var(--medal-light, #FFF3C4), var(--medal-mid, #FFD700) 45%, var(--medal-dark, #B8860B) 100%);
+  border: 2px solid var(--medal-border, #FFE68A);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), inset 0 -3px 6px rgba(0,0,0,0.35);
+}
+
+/* Diagonal crossed-sword glints etched into the frame */
+.rank-badge-medal .rank-badge-inner::before,
+.rank-badge-medal .rank-badge-inner::after {
+  content: '';
+  position: absolute;
+  width: 130%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+  top: 50%;
+  left: 50%;
+}
+.rank-badge-medal .rank-badge-inner::before { transform: translate(-50%, -50%) rotate(35deg); }
+.rank-badge-medal .rank-badge-inner::after   { transform: translate(-50%, -50%) rotate(-35deg); }
+
+.rank-badge-medal .rank-badge-num {
+  position: relative;
+  z-index: 2;
 }
 
 .rank-badge-crown {
   position: absolute;
-  top: -13px;
+  top: -20px;
   left: 50%;
   transform: translateX(-50%);
   color: #FFD700;
-  filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.8));
+  filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.9));
   animation: crownBob 2.2s ease-in-out infinite;
+  z-index: 3;
 }
 
 @keyframes crownBob {
@@ -960,36 +1019,39 @@ body::after {
 }
 
 .rank-badge.rank-gold {
-  background: linear-gradient(145deg, #FFF3C4, #FFD700 45%, #B8860B 100%);
+  --medal-light: #FFF3C4; --medal-mid: #FFD700; --medal-dark: #B8860B;
+  --medal-border: #FFE68A; --medal-ring: rgba(255,215,0,0.6); --medal-glow: rgba(255,215,0,0.4);
   color: #2b1d00;
   animation: pulseGold 2.2s ease-in-out infinite;
 }
 
 .rank-badge.rank-silver {
-  background: linear-gradient(145deg, #FFFFFF, #CBD5E1 45%, #7C8CA6 100%);
+  --medal-light: #FFFFFF; --medal-mid: #CBD5E1; --medal-dark: #7C8CA6;
+  --medal-border: #E7ECF2; --medal-ring: rgba(203,213,225,0.6); --medal-glow: rgba(203,213,225,0.4);
   color: #1a1f26;
   animation: pulseSilver 2.2s ease-in-out infinite;
 }
 
 .rank-badge.rank-bronze {
-  background: linear-gradient(145deg, #F0B27A, #CD7F32 45%, #8B4E1F 100%);
+  --medal-light: #F0B27A; --medal-mid: #CD7F32; --medal-dark: #8B4E1F;
+  --medal-border: #E3A870; --medal-ring: rgba(205,127,50,0.6); --medal-glow: rgba(205,127,50,0.4);
   color: #2b1500;
   animation: pulseBronze 2.2s ease-in-out infinite;
 }
 
 @keyframes pulseGold {
-  0%, 100% { box-shadow: 0 0 14px rgba(255, 215, 0, 0.5), 0 2px 6px rgba(0,0,0,0.4); transform: scale(1); }
-  50%      { box-shadow: 0 0 26px rgba(255, 215, 0, 0.85), 0 2px 6px rgba(0,0,0,0.4); transform: scale(1.05); }
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.5)); }
+  50%      { filter: drop-shadow(0 0 16px rgba(255, 215, 0, 0.85)); }
 }
 
 @keyframes pulseSilver {
-  0%, 100% { box-shadow: 0 0 12px rgba(203, 213, 225, 0.45), 0 2px 6px rgba(0,0,0,0.4); transform: scale(1); }
-  50%      { box-shadow: 0 0 20px rgba(226, 232, 240, 0.75), 0 2px 6px rgba(0,0,0,0.4); transform: scale(1.04); }
+  0%, 100% { filter: drop-shadow(0 0 7px rgba(203, 213, 225, 0.45)); }
+  50%      { filter: drop-shadow(0 0 14px rgba(226, 232, 240, 0.75)); }
 }
 
 @keyframes pulseBronze {
-  0%, 100% { box-shadow: 0 0 12px rgba(205, 127, 50, 0.45), 0 2px 6px rgba(0,0,0,0.4); transform: scale(1); }
-  50%      { box-shadow: 0 0 20px rgba(205, 127, 50, 0.75), 0 2px 6px rgba(0,0,0,0.4); transform: scale(1.04); }
+  0%, 100% { filter: drop-shadow(0 0 7px rgba(205, 127, 50, 0.45)); }
+  50%      { filter: drop-shadow(0 0 14px rgba(205, 127, 50, 0.75)); }
 }
 
 /* Premium glowing frame for the top 3 rows, with a slow breathing border glow
