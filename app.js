@@ -514,7 +514,7 @@ function tierIconGridHtml(player, opts = {}) {
     return `
       <div class="tier-icon-cell ${m === highlightMode ? 'is-current' : ''}" style="--cell-color:${meta.color}" title="${GAMEMODE_LABELS[m]}">
         <div class="tier-icon-circle">
-          <svg width="20" height="20"><use href="#${iconId}"/></svg>
+          <svg width="16" height="16"><use href="#${iconId}"/></svg>
         </div>
         <span class="tier-icon-label">${meta.short}</span>
       </div>`;
