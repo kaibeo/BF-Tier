@@ -924,8 +924,8 @@ body::after {
 }
 
 /* Top-3 medals: MOBA-style square rank frame — rounded square badge,
-   double metallic border, a slowly rotating light ring behind it, and
-   crossed-sword accents for #1. */
+   double metallic border, orbiting crystal shards, and crossed-sword
+   accents for #1. */
 .rank-badge-medal {
   position: relative;
   width: 42px;
@@ -938,18 +938,7 @@ body::after {
   box-shadow: inset 0 0 0 2px rgba(0,0,0,0.5);
 }
 
-/* Rotating halo ring behind the frame */
-.rank-badge-medal::before {
-  content: '';
-  position: absolute;
-  inset: -9px;
-  border-radius: 50%;
-  border: 2px dashed var(--medal-ring, rgba(255,215,0,0.55));
-  animation: ringSpin 6s linear infinite;
-  opacity: 0.85;
-}
-
-/* Soft glow disc behind the ring */
+/* Soft glow disc behind everything */
 .rank-badge-medal::after {
   content: '';
   position: absolute;
@@ -960,17 +949,49 @@ body::after {
   animation: haloPulse 2.4s ease-in-out infinite;
 }
 
-@keyframes ringSpin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
 @keyframes haloPulse {
   0%, 100% { opacity: 0.55; transform: scale(1); }
   50%      { opacity: 0.9; transform: scale(1.08); }
 }
 
-/* Inner square frame with beveled metallic border, sitting above the ring */
+/* Orbiting crystal shards — small diamond-shaped fragments circling the badge */
+.rank-badge-medal .crystal-orbit {
+  position: absolute;
+  inset: -16px;
+  animation: crystalOrbit 5s linear infinite;
+  pointer-events: none;
+}
+
+.rank-badge-medal .crystal-shard {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  background: linear-gradient(155deg, var(--medal-light, #FFF3C4), var(--medal-mid, #FFD700));
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  box-shadow: 0 0 8px var(--medal-glow, rgba(255,215,0,0.7));
+}
+
+.crystal-shard.s1 { top: 0; left: 50%; transform: translate(-50%, -50%); }
+.crystal-shard.s2 { top: 50%; right: 0; transform: translate(50%, -50%) scale(0.75); opacity: 0.85; }
+.crystal-shard.s3 { bottom: 0; left: 50%; transform: translate(-50%, 50%) scale(0.9); }
+.crystal-shard.s4 { top: 50%; left: 0; transform: translate(-50%, -50%) scale(0.65); opacity: 0.8; }
+
+@keyframes crystalOrbit {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Counter-rotating shards give a faceted, gem-like shimmer instead of a flat spin */
+.rank-badge-medal .crystal-shard {
+  animation: shardSpin 3s linear infinite;
+}
+@keyframes shardSpin {
+  from { filter: brightness(1); }
+  50%  { filter: brightness(1.5); }
+  to   { filter: brightness(1); }
+}
+
+/* Inner square frame with beveled metallic border, sitting above the shards */
 .rank-badge-medal .rank-badge-inner {
   position: absolute;
   inset: 0;
@@ -1017,6 +1038,7 @@ body::after {
   0%, 100% { transform: translateX(-50%) translateY(0) rotate(-3deg); }
   50%      { transform: translateX(-50%) translateY(-3px) rotate(3deg); }
 }
+
 
 .rank-badge.rank-gold {
   --medal-light: #FFF3C4; --medal-mid: #FFD700; --medal-dark: #B8860B;
