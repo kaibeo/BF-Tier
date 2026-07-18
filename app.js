@@ -71,7 +71,7 @@ const GAMEMODE_ITEM_IMG = {
   overall: 'https://minecraft.wiki/images/Invicon_Nether_Star.png',
   vanilla: 'https://minecraft.wiki/images/Invicon_End_Crystal.png',
   uhc:     'https://minecraft.wiki/images/Invicon_Water_Bucket.png',
-  pot:     'https://minecraft.wiki/images/Invicon_Potion.png',
+  pot:     'https://minecraft.wiki/images/Invicon_Potion_of_Healing.png',
   nethop:  'https://minecraft.wiki/images/Invicon_Netherite_Chestplate.png',
   smp:     'https://minecraft.wiki/images/Invicon_Shield.png',
   sword:   'https://minecraft.wiki/images/Invicon_Diamond_Sword.png',
