@@ -725,43 +725,50 @@ body::after {
   display: block;
 }
 
-/* ================= TOP-3 AVATAR ENERGY FRAME =================
-   A swirling galaxy/energy-sword ring wraps around the top-3 avatars,
-   colored gold / silver / bronze to match their rank. Built from a
-   spinning conic gradient (the "energy") plus a few wispy blur streaks
-   layered on top for a smoke/plasma feel. */
+/* ================= TOP-3 AVATAR ELEMENTAL FRAME =================
+   A square, rounded-corner frame for the top-3 avatars, decorated with
+   elemental energy swords crossing behind the corners and a spinning
+   elemental magic circle glowing underneath. Colored gold / silver /
+   bronze to match rank, with an elemental (fire/frost/arcane) tint. */
 .player-skin-wrap.avatar-frame-rank-1,
 .player-skin-wrap.avatar-frame-rank-2,
 .player-skin-wrap.avatar-frame-rank-3 {
   overflow: visible;
   border: none;
   background: transparent;
+  border-radius: 8px;
 }
 
+/* Spinning elemental magic circle glowing behind the avatar */
 .avatar-energy-ring {
   position: absolute;
-  inset: -9px;
+  inset: -12px;
   border-radius: 50%;
   pointer-events: none;
   z-index: 0;
 }
 
 .avatar-energy-ring::before {
+  /* outer rune ring */
   content: '';
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: conic-gradient(from 0deg, var(--ring-c1), var(--ring-c2), var(--ring-c3), var(--ring-c2), var(--ring-c1));
-  filter: blur(3px);
-  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #fff calc(100% - 5px), #fff 100%, transparent);
-  mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #fff calc(100% - 5px), #fff 100%, transparent);
-  animation: energySpin 3.4s linear infinite;
+  background:
+    repeating-conic-gradient(from 0deg,
+      var(--ring-c2) 0deg 6deg,
+      transparent 6deg 18deg);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 9px), #fff calc(100% - 8px), #fff 100%, transparent);
+  mask: radial-gradient(farthest-side, transparent calc(100% - 9px), #fff calc(100% - 8px), #fff 100%, transparent);
+  opacity: 0.9;
+  animation: energySpin 6s linear infinite;
 }
 
 .avatar-energy-ring::after {
+  /* inner glow core */
   content: '';
   position: absolute;
-  inset: -4px;
+  inset: 4px;
   border-radius: 50%;
   background: radial-gradient(circle, var(--ring-glow), transparent 70%);
   animation: haloPulse 2.4s ease-in-out infinite;
@@ -772,62 +779,101 @@ body::after {
   to   { transform: rotate(360deg); }
 }
 
-/* Wispy smoke/plasma streaks orbiting inside the ring, like the reference
-   swirl — small blurred blobs drifting around the circle at slightly
-   different speeds/radii for an organic, non-uniform look. */
-.energy-wisp {
+/* Thin inner magic-circle line, spinning the opposite way for a layered
+   "arcane sigil" look */
+.energy-wisp.w1 {
   position: absolute;
-  width: 40%;
-  height: 40%;
+  inset: 1px;
   border-radius: 50%;
-  background: radial-gradient(circle, var(--ring-c2), transparent 70%);
-  filter: blur(4px);
-  opacity: 0.85;
+  border: 1px dashed var(--ring-c3);
+  opacity: 0.55;
+  animation: energySpin 4.5s linear infinite reverse;
+}
+
+/* Elemental energy swords crossing behind the frame corners, blades
+   pointing outward like they're stabbed through the frame */
+.energy-wisp.w2,
+.energy-wisp.w3 {
+  position: absolute;
   top: 50%;
   left: 50%;
-  margin: -20% 0 0 -20%;
+  width: 3px;
+  height: 46px;
+  margin: -23px 0 0 -1.5px;
+  border-radius: 2px 2px 0 0;
+  background: linear-gradient(to top, var(--ring-c3), var(--ring-c2) 55%, #fff 100%);
+  box-shadow: 0 0 6px 1px var(--ring-glow);
+  transform-origin: center;
+  z-index: 2;
 }
-.energy-wisp.w1 { animation: wispOrbit 2.6s linear infinite; }
-.energy-wisp.w2 { animation: wispOrbit 3.4s linear infinite reverse; width: 30%; height: 30%; margin: -15% 0 0 -15%; opacity: 0.65; }
-.energy-wisp.w3 { animation: wispOrbit 4.1s linear infinite; width: 24%; height: 24%; margin: -12% 0 0 -12%; opacity: 0.55; animation-delay: -1.5s; }
-.energy-wisp.w4 { animation: wispOrbit 2.9s linear infinite reverse; width: 20%; height: 20%; margin: -10% 0 0 -10%; opacity: 0.5; animation-delay: -0.8s; }
+.energy-wisp.w2 { transform: rotate(45deg) translateY(-4px); }
+.energy-wisp.w3 { transform: rotate(-135deg) translateY(-4px); }
+
+/* small crossguard nub on each blade */
+.energy-wisp.w2::before,
+.energy-wisp.w3::before {
+  content: '';
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  width: 11px;
+  height: 3px;
+  margin-left: -5.5px;
+  background: var(--ring-c2);
+  border-radius: 2px;
+  box-shadow: 0 0 4px var(--ring-glow);
+}
+
+/* small floating elemental spark */
+.energy-wisp.w4 {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ring-c1);
+  box-shadow: 0 0 8px 2px var(--ring-glow);
+  top: 50%;
+  left: 50%;
+  margin: -3px 0 0 -3px;
+  animation: wispOrbit 3.2s linear infinite;
+}
 
 @keyframes wispOrbit {
-  from { transform: rotate(0deg) translateX(58%); }
-  to   { transform: rotate(360deg) translateX(58%); }
+  from { transform: rotate(0deg) translateX(26px) rotate(0deg); }
+  to   { transform: rotate(360deg) translateX(26px) rotate(-360deg); }
 }
 
-/* Per-rank color themes: gold / silver / bronze, all with a galaxy-blue
-   undertone mixed in for depth, echoing the reference image. */
+/* Per-rank elemental color themes: gold/fire, silver/frost, bronze/arcane */
 .player-skin-wrap.avatar-frame-rank-1 {
   --ring-c1: #fff6d0;
   --ring-c2: #ffd700;
-  --ring-c3: #7b5cff;
-  --ring-glow: rgba(255, 215, 0, 0.45);
+  --ring-c3: #ff7b1c;
+  --ring-glow: rgba(255, 180, 0, 0.55);
 }
 
 .player-skin-wrap.avatar-frame-rank-2 {
   --ring-c1: #ffffff;
   --ring-c2: #cbd5e1;
   --ring-c3: #6ea8ff;
-  --ring-glow: rgba(203, 213, 225, 0.4);
+  --ring-glow: rgba(147, 197, 253, 0.55);
 }
 
 .player-skin-wrap.avatar-frame-rank-3 {
   --ring-c1: #ffdcb0;
   --ring-c2: #cd7f32;
-  --ring-c3: #7b5cff;
-  --ring-glow: rgba(205, 127, 50, 0.4);
+  --ring-c3: #9b5cff;
+  --ring-glow: rgba(155, 92, 255, 0.5);
 }
 
 .player-skin-wrap.avatar-frame-rank-1 .player-skin,
 .player-skin-wrap.avatar-frame-rank-2 .player-skin,
 .player-skin-wrap.avatar-frame-rank-3 .player-skin {
   position: relative;
-  z-index: 1;
-  border-radius: 6px;
+  z-index: 3;
+  border-radius: 8px;
   background: var(--bg-tertiary);
-  border: 1px solid rgba(255,255,255,0.15);
+  border: 2px solid var(--ring-c2);
+  box-shadow: 0 0 8px 1px var(--ring-glow), inset 0 0 6px rgba(0,0,0,0.4);
 }
 
 /* Player info column */
