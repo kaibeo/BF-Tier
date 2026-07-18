@@ -748,27 +748,28 @@ body::after {
   animation: haloPulse 2.4s ease-in-out infinite;
 }
 
-/* RGB shimmer border chasing around the frame, layered under the
-   per-rank glow for a bit of extra sparkle */
+/* RGB shimmer border chasing around the square frame's edge, layered
+   under the per-rank glow for a bit of extra sparkle */
 .avatar-energy-ring::before {
   content: '';
   position: absolute;
   inset: -2px;
   border-radius: 12px;
   padding: 2px;
-  background: conic-gradient(from 0deg,
+  background: linear-gradient(90deg,
     #ff003c, #ff8a00, #ffee00, #4dff00, #00fff2, #0066ff, #cb00ff, #ff003c);
+  background-size: 300% 300%;
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
-  opacity: 0.85;
+  opacity: 0.9;
   animation: rgbSpin 3s linear infinite;
 }
 
 @keyframes rgbSpin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
 }
 
 /* small energy-sword icon decorating the bottom-right corner */
@@ -1737,6 +1738,50 @@ body::after {
   background: radial-gradient(ellipse 120% 100% at 20% 0%, var(--banner-color, transparent) 0%, transparent 65%);
   opacity: 0.35;
   pointer-events: none;
+}
+
+.modal-avatar-wrap {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.modal-avatar-wrap .modal-avatar {
+  width: 100%;
+  height: 100%;
+}
+
+.modal-avatar-wrap.avatar-frame-rank-1,
+.modal-avatar-wrap.avatar-frame-rank-2,
+.modal-avatar-wrap.avatar-frame-rank-3 {
+  border-radius: 8px;
+}
+
+.modal-avatar-wrap.avatar-frame-rank-1 .modal-avatar,
+.modal-avatar-wrap.avatar-frame-rank-2 .modal-avatar,
+.modal-avatar-wrap.avatar-frame-rank-3 .modal-avatar {
+  border: 2px solid var(--ring-c2);
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.4);
+}
+
+.modal-avatar-wrap .energy-wisp.w1 {
+  width: 20px;
+  height: 20px;
+  bottom: -8px;
+  right: -8px;
+}
+.modal-avatar-wrap .energy-wisp.w1::before {
+  width: 4px;
+  height: 15px;
+  margin-left: -2px;
+}
+.modal-avatar-wrap .energy-wisp.w1::after {
+  top: 11px;
+  width: 12px;
+  height: 3px;
+  margin-left: -6px;
 }
 
 .modal-avatar {

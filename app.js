@@ -817,15 +817,18 @@ function openModal(player, mode) {
   const tier = isOverall ? computeOverallTier(overallElo) : player.tiers[mode];
   const meta = TIER_META[tier];
 
-  // If opened from the Overall tab, resolve the rank-based combat title
-  // the same way the leaderboard does, so it stays consistent everywhere.
+  // Determine this player's rank within the current mode's leaderboard so
+  // the modal avatar can show the same top-3 elemental frame as the list.
+  const rankingForMode = [...getPlayersForMode(mode === 'overall' ? 'overall' : mode)]
+    .map((p) => ({ p, elo: mode === 'overall' ? computeOverallElo(p) : p.stats.elo }))
+    .sort((a, b) => b.elo - a.elo);
+  const modalRank = rankingForMode.findIndex((entry) => entry.p.id === player.id) + 1;
+
   let effectiveTitle = player.title;
   let effectiveVerified = player.verified;
   if (isOverall) {
-    const globalRanking = [...getPlayersForMode('overall')]
-      .map((p) => ({ p, elo: computeOverallElo(p) }))
-      .sort((a, b) => b.elo - a.elo);
-    const rank = globalRanking.findIndex((entry) => entry.p.id === player.id) + 1;
+    const globalRanking = rankingForMode;
+    const rank = modalRank;
     const rankTitle = getRankTitle(rank);
     if (rankTitle) {
       effectiveTitle = rankTitle;
@@ -834,6 +837,18 @@ function openModal(player, mode) {
   }
 
   document.getElementById('modalAvatar').src = SKIN_URL_LG(player.username);
+  const avatarWrap = document.getElementById('modalAvatarWrap');
+  if (avatarWrap) {
+    avatarWrap.className = 'modal-avatar-wrap';
+    avatarWrap.querySelectorAll('.avatar-energy-ring, .energy-wisp').forEach((el) => el.remove());
+    if (modalRank && modalRank <= 3) {
+      avatarWrap.classList.add(`avatar-frame-rank-${modalRank}`);
+      avatarWrap.insertAdjacentHTML('afterbegin', `
+        <div class="avatar-energy-ring"></div>
+        <span class="energy-wisp w1"></span>
+      `);
+    }
+  }
   const headerEl = document.getElementById('modalHeader');
   if (headerEl) headerEl.style.setProperty('--banner-color', meta.color);
 
