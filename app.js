@@ -514,7 +514,7 @@ function tierIconGridHtml(player, opts = {}) {
     return `
       <div class="tier-icon-cell ${m === highlightMode ? 'is-current' : ''}" style="--cell-color:${meta.color}" title="${GAMEMODE_LABELS[m]}">
         <div class="tier-icon-circle">
-          <svg width="16" height="16"><use href="#${iconId}"/></svg>
+          <svg width="13" height="13"><use href="#${iconId}"/></svg>
         </div>
         <span class="tier-icon-label">${meta.short}</span>
       </div>`;
@@ -559,16 +559,20 @@ function renderRankedOverall(filtered, modeLabel) {
       <div class="overall-player-card ${rank <= 3 ? 'rank-' + rank : ''}" data-player-id="${player.id}" role="button" tabindex="0"
            style="animation-delay: ${Math.min(i, 40) * 18}ms">
         <div class="overall-player-card-head">
-          ${rankBadgeHtml(rank)}
-          ${skinHtml(player.username)}
-          <div class="rank-row-info">
-            ${playerNameBlockHtml(player, nameOverrides)}
+          <div class="overall-card-row1">
+            ${rankBadgeHtml(rank)}
+            ${skinHtml(player.username)}
+            <div class="rank-row-info">
+              ${playerNameBlockHtml(player, nameOverrides)}
+            </div>
+            <span class="rank-row-elo">${elo}<small>elo</small></span>
           </div>
-          ${regionBadgeHtml(player.region)}
-          ${tierTagHtml(overallTier)}
-          <span class="rank-row-elo">${elo}<small>elo</small></span>
-          <div class="player-row-status ${player.status}" title="${player.status}">
-            ${getStatusIcon(player.status)}
+          <div class="overall-card-row2">
+            ${regionBadgeHtml(player.region)}
+            ${tierTagHtml(overallTier)}
+            <div class="player-row-status ${player.status}" title="${player.status}">
+              ${getStatusIcon(player.status)}
+            </div>
           </div>
         </div>
         ${iconGrid ? `
