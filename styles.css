@@ -923,40 +923,73 @@ body::after {
   border: 1px solid var(--border-subtle);
 }
 
+/* Top-3 medals: larger, shield-shaped badge with metallic shine + floating crown for #1 */
+.rank-badge-medal {
+  position: relative;
+  width: 40px;
+  height: 44px;
+  border-radius: 0;
+  clip-path: polygon(50% 0%, 100% 20%, 100% 75%, 50% 100%, 0% 75%, 0% 20%);
+  font-size: 1rem;
+  border: none;
+  overflow: visible;
+}
+
+.rank-badge-medal::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  clip-path: polygon(50% 0%, 100% 20%, 100% 75%, 50% 100%, 0% 75%, 0% 20%);
+  background: linear-gradient(155deg, rgba(255,255,255,0.35), transparent 55%);
+  mix-blend-mode: overlay;
+}
+
+.rank-badge-crown {
+  position: absolute;
+  top: -13px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #FFD700;
+  filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.8));
+  animation: crownBob 2.2s ease-in-out infinite;
+}
+
+@keyframes crownBob {
+  0%, 100% { transform: translateX(-50%) translateY(0) rotate(-3deg); }
+  50%      { transform: translateX(-50%) translateY(-3px) rotate(3deg); }
+}
+
 .rank-badge.rank-gold {
-  background: linear-gradient(145deg, #FFE68A, #D4A017);
-  color: #241900;
-  border-color: #FFD700;
+  background: linear-gradient(145deg, #FFF3C4, #FFD700 45%, #B8860B 100%);
+  color: #2b1d00;
   animation: pulseGold 2.2s ease-in-out infinite;
 }
 
 .rank-badge.rank-silver {
-  background: linear-gradient(145deg, #F1F5F9, #A0AEC0);
+  background: linear-gradient(145deg, #FFFFFF, #CBD5E1 45%, #7C8CA6 100%);
   color: #1a1f26;
-  border-color: #E2E8F0;
   animation: pulseSilver 2.2s ease-in-out infinite;
 }
 
 .rank-badge.rank-bronze {
-  background: linear-gradient(145deg, #E8A870, #A9612F);
-  color: #241500;
-  border-color: #CD7F32;
+  background: linear-gradient(145deg, #F0B27A, #CD7F32 45%, #8B4E1F 100%);
+  color: #2b1500;
   animation: pulseBronze 2.2s ease-in-out infinite;
 }
 
 @keyframes pulseGold {
-  0%, 100% { box-shadow: 0 0 12px rgba(255, 215, 0, 0.45), inset 0 1px 0 rgba(255,255,255,0.5); transform: scale(1); }
-  50%      { box-shadow: 0 0 22px rgba(255, 215, 0, 0.8), inset 0 1px 0 rgba(255,255,255,0.6); transform: scale(1.06); }
+  0%, 100% { box-shadow: 0 0 14px rgba(255, 215, 0, 0.5), 0 2px 6px rgba(0,0,0,0.4); transform: scale(1); }
+  50%      { box-shadow: 0 0 26px rgba(255, 215, 0, 0.85), 0 2px 6px rgba(0,0,0,0.4); transform: scale(1.05); }
 }
 
 @keyframes pulseSilver {
-  0%, 100% { box-shadow: 0 0 10px rgba(203, 213, 225, 0.4), inset 0 1px 0 rgba(255,255,255,0.5); transform: scale(1); }
-  50%      { box-shadow: 0 0 18px rgba(226, 232, 240, 0.7), inset 0 1px 0 rgba(255,255,255,0.6); transform: scale(1.05); }
+  0%, 100% { box-shadow: 0 0 12px rgba(203, 213, 225, 0.45), 0 2px 6px rgba(0,0,0,0.4); transform: scale(1); }
+  50%      { box-shadow: 0 0 20px rgba(226, 232, 240, 0.75), 0 2px 6px rgba(0,0,0,0.4); transform: scale(1.04); }
 }
 
 @keyframes pulseBronze {
-  0%, 100% { box-shadow: 0 0 10px rgba(205, 127, 50, 0.4), inset 0 1px 0 rgba(255,255,255,0.4); transform: scale(1); }
-  50%      { box-shadow: 0 0 18px rgba(205, 127, 50, 0.7), inset 0 1px 0 rgba(255,255,255,0.5); transform: scale(1.05); }
+  0%, 100% { box-shadow: 0 0 12px rgba(205, 127, 50, 0.45), 0 2px 6px rgba(0,0,0,0.4); transform: scale(1); }
+  50%      { box-shadow: 0 0 20px rgba(205, 127, 50, 0.75), 0 2px 6px rgba(0,0,0,0.4); transform: scale(1.04); }
 }
 
 /* Premium glowing frame for the top 3 rows, with a slow breathing border glow */
